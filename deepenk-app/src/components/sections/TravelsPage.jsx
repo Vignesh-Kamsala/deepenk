@@ -1,93 +1,157 @@
-import React from 'react'
-import { BsSearch } from 'react-icons/bs'
+import React, { useState } from 'react'
 
 const TravelsPage = () => {
-  const destinations = [
-    { id: 1, name: 'Paris, France', type: 'City Break', emoji: '🗼' },
-    { id: 2, name: 'Bali, Indonesia', type: 'Beach Resort', emoji: '🏖️' },
-    { id: 3, name: 'Tokyo, Japan', type: 'Cultural Tour', emoji: '🏯' },
-    { id: 4, name: 'New York, USA', type: 'City Break', emoji: '🗽' }
+  const [selectedTransport, setSelectedTransport] = useState(null)
+
+  const transportTypes = [
+    { id: 1, emoji: '🚌', label: 'Bus' },
+    { id: 2, emoji: '🚄', label: 'Train' },
+    { id: 3, emoji: '✈️', label: 'Flight' }
   ]
 
   return (
-    <div className="min-h-screen bg-white px-4 pt-20 pb-8">
-      {/* Page Title */}
-      <h1
-        className="text-[32px] font-bold mb-6"
-        style={{ color: '#111111' }}
-      >
-        Travel Packages
-      </h1>
-
-      {/* Search Bar */}
-      <div
-        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl mb-6"
-        style={{ backgroundColor: '#F5F5F5' }}
-      >
-        <BsSearch className="text-base" style={{ color: '#BDBDBD' }} />
-        <input
-          type="text"
-          placeholder="Search destinations..."
-          className="flex-1 outline-none text-sm bg-transparent"
-          style={{ color: '#111111' }}
-        />
+    <div className="min-h-screen bg-white flex flex-col items-center px-4 pt-20">
+      {/* Transport Type Buttons */}
+      <div className="flex items-center justify-center gap-4 mb-8 mt-8">
+        {transportTypes.map((transport) => (
+          <button
+            key={transport.id}
+            onClick={() => setSelectedTransport(transport.id)}
+            className="px-8 py-3 rounded-full flex items-center justify-center transition-all active:scale-95"
+            style={{
+              border: '2px solid #BDBDBD',
+              backgroundColor: selectedTransport === transport.id ? '#E5E5E5' : '#FFFFFF'
+            }}
+          >
+            <span className="text-3xl">{transport.emoji}</span>
+          </button>
+        ))}
       </div>
 
-      {/* Popular Destinations */}
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-4" style={{ color: '#111111' }}>
-          Popular Destinations
-        </h2>
-        <div className="space-y-4">
-          {destinations.map((destination) => (
-            <div
-              key={destination.id}
-              className="flex items-center gap-4 p-4 rounded-2xl transition-all active:scale-98"
-              style={{
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
-                border: '1px solid #F5F5F5'
-              }}
-            >
-              {/* Icon */}
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: '#FFF9E6' }}
-              >
-                <span className="text-3xl">{destination.emoji}</span>
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <h3
-                  className="text-base font-semibold mb-1"
-                  style={{ color: '#111111' }}
-                >
-                  {destination.name}
-                </h3>
-                <p
-                  className="text-xs"
-                  style={{ color: '#757575' }}
-                >
-                  {destination.type}
-                </p>
-              </div>
-
-              {/* Arrow */}
-              <div className="flex-shrink-0">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="#757575"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
-          ))}
+      {/* Input Fields Container */}
+      <div className="w-full max-w-md space-y-4 mb-6">
+        {/* Current Location */}
+        <div
+          className="w-full flex items-center gap-4 px-5 py-4 rounded-full"
+          style={{
+            border: '1.5px solid #E5E5E5',
+            backgroundColor: '#FFFFFF'
+          }}
+        >
+          <svg
+            className="w-6 h-6 flex-shrink-0"
+            fill="none"
+            stroke="#757575"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          <input
+            type="text"
+            placeholder="Current Location"
+            className="flex-1 outline-none text-base bg-transparent"
+            style={{ color: '#757575' }}
+          />
         </div>
+
+        {/* Enter Destination */}
+        <div
+          className="w-full flex items-center gap-4 px-5 py-4 rounded-full"
+          style={{
+            border: '1.5px solid #E5E5E5',
+            backgroundColor: '#FFFFFF'
+          }}
+        >
+          <svg
+            className="w-6 h-6 flex-shrink-0"
+            fill="none"
+            stroke="#757575"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            />
+          </svg>
+          <input
+            type="text"
+            placeholder="Enter Destination"
+            className="flex-1 outline-none text-base bg-transparent"
+            style={{ color: '#757575' }}
+          />
+        </div>
+
+        {/* Select Date */}
+        <div
+          className="w-full flex items-center gap-4 px-5 py-4 rounded-full"
+          style={{
+            border: '1.5px solid #E5E5E5',
+            backgroundColor: '#FFFFFF'
+          }}
+        >
+          <svg
+            className="w-6 h-6 flex-shrink-0"
+            fill="none"
+            stroke="#757575"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Select Date"
+            className="flex-1 outline-none text-base bg-transparent"
+            style={{ color: '#757575' }}
+          />
+        </div>
+      </div>
+
+      {/* Search Button */}
+      <button
+        className="w-full max-w-md py-4 rounded-full transition-all active:scale-98 mb-6"
+        style={{ backgroundColor: '#FF6F00' }}
+      >
+        <span className="text-lg font-semibold text-white">Search</span>
+      </button>
+
+      {/* Description Text */}
+      <div className="text-center max-w-sm mb-6">
+        <p
+          className="text-sm leading-relaxed"
+          style={{ color: '#757575' }}
+        >
+          Travel made smarter with Deepenk —<br />
+          compare buses,<br />
+          trains, and flights instantly to get the best<br />
+          price and timing.
+        </p>
+      </div>
+
+      {/* Deepenk Logo */}
+      <div className="mt-4">
+        <svg
+          className="w-12 h-12"
+          viewBox="0 0 24 24"
+          fill="#111111"
+        >
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
       </div>
     </div>
   )

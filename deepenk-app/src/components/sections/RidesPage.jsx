@@ -2,133 +2,237 @@ import React, { useState } from 'react'
 import { BsSearch } from 'react-icons/bs'
 
 const RidesPage = () => {
-  const [showPickupDrop, setShowPickupDrop] = useState(false)
+  const [selectedTransport, setSelectedTransport] = useState(null)
+
+  const transportTypes = [
+    { id: 1, emoji: '🏍️', label: 'Bike' },
+    { id: 2, emoji: '🏢', label: 'Auto' },
+    { id: 3, emoji: '🚗', label: 'Car' }
+  ]
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header with Icon Buttons */}
+      {/* Transport Type Buttons */}
       <div className="px-4 pt-20 pb-4">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          {/* Bike Icon Button */}
-          <button
-            className="w-16 h-10 rounded-full flex items-center justify-center transition-all active:scale-95"
-            style={{ border: '2px solid #111111' }}
-          >
-            <span className="text-xl">🏍️</span>
-          </button>
-
-          {/* Building/Hotel Icon Button */}
-          <button
-            className="w-16 h-10 rounded-full flex items-center justify-center transition-all active:scale-95"
-            style={{ border: '2px solid #111111', backgroundColor: '#FFF9E6' }}
-          >
-            <span className="text-xl">🏢</span>
-          </button>
-
-          {/* Car Icon Button */}
-          <button
-            className="w-16 h-10 rounded-full flex items-center justify-center transition-all active:scale-95"
-            style={{ border: '2px solid #111111' }}
-          >
-            <span className="text-xl">🚗</span>
-          </button>
+        <div className="flex items-center justify-center gap-4 mb-4">
+          {transportTypes.map((transport) => (
+            <button
+              key={transport.id}
+              onClick={() => setSelectedTransport(transport.id)}
+              className="px-6 py-2.5 rounded-full flex items-center justify-center transition-all active:scale-95"
+              style={{
+                border: '2.5px solid #111111',
+                backgroundColor: selectedTransport === transport.id ? '#FFF9E6' : '#FFFFFF'
+              }}
+            >
+              <span className="text-2xl">{transport.emoji}</span>
+            </button>
+          ))}
         </div>
 
         {/* Map Section */}
         <div
           className="w-full rounded-3xl overflow-hidden mb-4 relative"
           style={{
-            height: '380px',
-            backgroundColor: '#F5F5F5',
-            backgroundImage: 'linear-gradient(45deg, #E5E5E5 25%, transparent 25%), linear-gradient(-45deg, #E5E5E5 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #E5E5E5 75%), linear-gradient(-45deg, transparent 75%, #E5E5E5 75%)',
-            backgroundSize: '20px 20px',
-            backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px'
+            height: '420px',
+            backgroundColor: '#F8F8F8'
           }}
         >
-          {/* Map Placeholder Content */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-4xl mb-2">🗺️</div>
-              <p className="text-sm" style={{ color: '#757575' }}>Map View</p>
-              <p className="text-xs mt-1" style={{ color: '#BDBDBD' }}>Route visualization</p>
+          {/* Map Background Pattern */}
+          <div className="absolute inset-0">
+            {/* Grid lines to simulate map */}
+            <svg className="w-full h-full" style={{ opacity: 0.15 }}>
+              <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#CCCCCC" strokeWidth="1" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+
+            {/* Light green areas (parks/open spaces) */}
+            <div
+              className="absolute rounded-lg"
+              style={{
+                width: '60px',
+                height: '50px',
+                backgroundColor: '#E8F5E9',
+                top: '20%',
+                left: '5%',
+                opacity: 0.6
+              }}
+            />
+            <div
+              className="absolute rounded-lg"
+              style={{
+                width: '45px',
+                height: '45px',
+                backgroundColor: '#E8F5E9',
+                bottom: '25%',
+                right: '8%',
+                opacity: 0.6
+              }}
+            />
+          </div>
+
+          {/* Blue Route Line */}
+          <svg
+            className="absolute inset-0 w-full h-full"
+            style={{ zIndex: 1 }}
+          >
+            <path
+              d="M 50 380 Q 80 320, 100 280 T 140 220 T 180 180 T 240 140 T 300 100 T 360 70"
+              fill="none"
+              stroke="#2196F3"
+              strokeWidth="6"
+              strokeLinecap="round"
+            />
+          </svg>
+
+          {/* Start Point Marker (MG Road) */}
+          <div
+            className="absolute flex items-center gap-2"
+            style={{
+              bottom: '50px',
+              left: '30px',
+              zIndex: 2
+            }}
+          >
+            <div
+              className="w-11 h-11 rounded-full flex items-center justify-center"
+              style={{
+                backgroundColor: '#4CAF50',
+                border: '3px solid white',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              }}
+            >
+              <div className="w-3 h-3 rounded-full bg-white"></div>
+            </div>
+            <div
+              className="px-2.5 py-1 rounded"
+              style={{
+                backgroundColor: 'white',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
+                fontSize: '13px',
+                fontWeight: '500',
+                color: '#111111'
+              }}
+            >
+              MG Road
             </div>
           </div>
 
-          {/* Start Point Marker */}
+          {/* End Point Marker (Indiranagar) */}
           <div
-            className="absolute w-10 h-10 rounded-full flex items-center justify-center"
+            className="absolute flex items-center gap-2"
             style={{
-              bottom: '40px',
-              left: '30px',
-              backgroundColor: '#10B981',
-              border: '3px solid white',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              top: '40px',
+              right: '30px',
+              zIndex: 2
             }}
           >
-            <span className="text-white text-xs font-bold">S</span>
+            <div
+              className="px-2.5 py-1 rounded"
+              style={{
+                backgroundColor: 'white',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
+                fontSize: '13px',
+                fontWeight: '500',
+                color: '#111111'
+              }}
+            >
+              Indiranagar
+            </div>
+            <div
+              className="w-11 h-11 rounded-full flex items-center justify-center"
+              style={{
+                backgroundColor: '#4CAF50',
+                border: '3px solid white',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              }}
+            >
+              <div className="w-3 h-3 rounded-full bg-white"></div>
+            </div>
+            {/* Checkered flag */}
+            <div className="text-2xl" style={{ marginLeft: '-8px' }}>🏁</div>
           </div>
 
-          {/* End Point Marker */}
+          {/* Vehicle Icons on Route */}
           <div
-            className="absolute w-10 h-10 rounded-full flex items-center justify-center"
+            className="absolute"
             style={{
-              top: '30px',
-              right: '30px',
-              backgroundColor: '#10B981',
-              border: '3px solid white',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              bottom: '180px',
+              left: '80px',
+              zIndex: 2
             }}
           >
-            <span className="text-white text-xs font-bold">E</span>
+            <div className="flex gap-2">
+              <div className="text-3xl">🛺</div>
+              <div className="text-3xl">🚚</div>
+            </div>
           </div>
 
           {/* Service Provider Badges */}
-          <div className="absolute bottom-4 left-4 flex gap-2">
+          <div
+            className="absolute flex gap-2"
+            style={{
+              bottom: '20px',
+              left: '20px',
+              zIndex: 3
+            }}
+          >
+            {/* Rapido */}
             <div
-              className="px-3 py-1.5 rounded-full font-semibold text-xs"
-              style={{ backgroundColor: '#FFD700', color: '#111111' }}
+              className="px-3 py-1.5 rounded-full font-bold text-xs"
+              style={{
+                backgroundColor: '#FFD700',
+                color: '#111111'
+              }}
             >
               Rapido
             </div>
+
+            {/* Uber */}
             <div
-              className="px-3 py-1.5 rounded-full font-semibold text-xs"
-              style={{ backgroundColor: '#000000', color: '#FFFFFF' }}
+              className="px-3 py-1.5 rounded-full font-bold text-xs"
+              style={{
+                backgroundColor: '#000000',
+                color: '#FFFFFF'
+              }}
             >
               Uber
             </div>
-            <div
-              className="px-3 py-1.5 rounded-full font-semibold text-xs"
-              style={{ backgroundColor: '#FFFFFF', color: '#111111', border: '1.5px solid #E5E5E5' }}
-            >
-              OLA
-            </div>
-          </div>
 
-          {/* Location Labels */}
-          <div
-            className="absolute px-2 py-1 rounded text-xs font-medium"
-            style={{ bottom: '90px', left: '20px', backgroundColor: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
-          >
-            MG Road
-          </div>
-          <div
-            className="absolute px-2 py-1 rounded text-xs font-medium"
-            style={{ top: '80px', right: '20px', backgroundColor: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
-          >
-            Indiranagar
+            {/* OLA */}
+            <div
+              className="px-3 py-1.5 rounded-full font-bold text-xs flex items-center gap-1"
+              style={{
+                backgroundColor: '#FFFFFF',
+                color: '#111111',
+                border: '1.5px solid #E5E5E5'
+              }}
+            >
+              <div
+                className="w-4 h-4 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: '#FFD700' }}
+              >
+                <span style={{ fontSize: '8px' }}>⭕</span>
+              </div>
+              <span>OLA</span>
+            </div>
           </div>
         </div>
 
         {/* Search Input */}
         <div
-          className="w-full flex items-center gap-3 px-4 py-3.5 rounded-full mb-3"
+          className="w-full flex items-center gap-3 px-5 py-3.5 rounded-full mb-3"
           style={{
             border: '1.5px solid #E5E5E5',
-            backgroundColor: '#FFFFFF'
+            backgroundColor: '#FFFFFF',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
           }}
-          onClick={() => setShowPickupDrop(!showPickupDrop)}
         >
-          <BsSearch className="text-lg" style={{ color: '#757575' }} />
+          <BsSearch className="text-lg flex-shrink-0" style={{ color: '#757575' }} />
           <input
             type="text"
             placeholder="Where do you want to go?"
@@ -138,55 +242,13 @@ const RidesPage = () => {
         </div>
 
         {/* Description Text */}
-        <p className="text-center text-xs mb-4" style={{ color: '#757575' }}>
-          Deepenk find's Best routs and prices from<br />trusted ride partners
+        <p
+          className="text-center text-xs leading-relaxed"
+          style={{ color: '#9E9E9E' }}
+        >
+          Deepenk find's Best routs and prices from<br />
+          trusted ride partners
         </p>
-
-        {/* Pickup/Drop Fields (Conditional) */}
-        {showPickupDrop && (
-          <div className="space-y-3 mb-3">
-            <div
-              className="w-full flex items-center gap-3 px-4 py-3.5 rounded-full"
-              style={{
-                border: '1.5px solid #E5E5E5',
-                backgroundColor: '#FFFFFF'
-              }}
-            >
-              <span className="text-lg">📍</span>
-              <input
-                type="text"
-                placeholder="Pickup......"
-                className="flex-1 outline-none text-[15px] bg-transparent"
-                style={{ color: '#111111' }}
-              />
-            </div>
-
-            <div
-              className="w-full flex items-center gap-3 px-4 py-3.5 rounded-full"
-              style={{
-                border: '1.5px solid #E5E5E5',
-                backgroundColor: '#FFFFFF'
-              }}
-            >
-              <span className="text-lg">📍</span>
-              <input
-                type="text"
-                placeholder="Drop......"
-                className="flex-1 outline-none text-[15px] bg-transparent"
-                style={{ color: '#111111' }}
-              />
-            </div>
-
-            {/* Select from Map Button */}
-            <button
-              className="px-4 py-2.5 rounded-full flex items-center gap-2 transition-all active:scale-95"
-              style={{ backgroundColor: '#D9D9D9', color: '#111111' }}
-            >
-              <span className="text-sm">📍</span>
-              <span className="text-sm font-medium">Select from the map</span>
-            </button>
-          </div>
-        )}
       </div>
     </div>
   )
