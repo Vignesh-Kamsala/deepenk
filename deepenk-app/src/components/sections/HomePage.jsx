@@ -1,78 +1,105 @@
 import React from 'react'
 import logoImg from '../../assets/sidebar/logo.png'
-import submitIcon from '../../assets/sidebar/submit.png'
 import { BsMicFill } from 'react-icons/bs'
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-white relative pb-32">
+    <div className="min-h-screen flex flex-col bg-white relative">
 
       {/* Center Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 pb-36">
 
         {/* Logo */}
-        <div className="mb-8">
+        <div className="mb-10">
           <img
             src={logoImg}
             alt="Deepenk Logo"
-            className="w-20 h-20 object-contain"
+            className="w-16 h-16 object-contain"
           />
         </div>
 
         {/* Main Heading */}
-        <h1 className="text-[32px] font-bold leading-tight text-center mb-8 text-black max-w-sm">
+        <h1
+          className="text-[34px] font-normal leading-tight text-center mb-10 max-w-sm"
+          style={{ color: '#111111', letterSpacing: '-0.02em' }}
+        >
           what do you want to choose today?
         </h1>
 
         {/* Action Buttons */}
-        <div className="flex flex-col gap-3 w-full max-w-xs mb-6">
-          <div className="flex gap-3">
-            <button className="flex-1 px-4 py-2.5 bg-[#D9D9D9] hover:bg-gray-300 rounded-full transition-colors">
-              <span className="font-semibold text-sm text-black">Book a Ride</span>
-            </button>
-            <button className="flex-1 px-4 py-2.5 bg-[#D9D9D9] hover:bg-gray-300 rounded-full transition-colors">
-              <span className="font-semibold text-sm text-black">Book a Ticket</span>
-            </button>
-          </div>
-          <div className="flex gap-3">
-            <button className="flex-1 px-4 py-2.5 bg-[#D9D9D9] hover:bg-gray-300 rounded-full transition-colors">
-              <span className="font-semibold text-sm text-black">Order a Food</span>
-            </button>
-            <button className="px-4 py-2.5 bg-[#D9D9D9] hover:bg-gray-300 rounded-full transition-colors">
-              <span className="font-semibold text-sm text-black">Shopping</span>
-            </button>
-          </div>
+        <div className="flex flex-wrap justify-center gap-2.5 w-full max-w-sm mb-8">
+          <button
+            className="px-[14px] py-[8px] rounded-full transition-all active:scale-95"
+            style={{ backgroundColor: '#D9D9D9', color: '#111111' }}
+          >
+            <span className="text-[14px] font-medium">Book a Ride</span>
+          </button>
+          <button
+            className="px-[14px] py-[8px] rounded-full transition-all active:scale-95"
+            style={{ backgroundColor: '#D9D9D9', color: '#111111' }}
+          >
+            <span className="text-[14px] font-medium">Book a Ticket</span>
+          </button>
+          <button
+            className="px-[14px] py-[8px] rounded-full transition-all active:scale-95"
+            style={{ backgroundColor: '#D9D9D9', color: '#111111' }}
+          >
+            <span className="text-[14px] font-medium">Order a Food</span>
+          </button>
+          <button
+            className="px-[14px] py-[8px] rounded-full transition-all active:scale-95"
+            style={{ backgroundColor: '#D9D9D9', color: '#111111' }}
+          >
+            <span className="text-[14px] font-medium">Shopping</span>
+          </button>
         </div>
 
       </div>
 
       {/* Bottom Input Section - Fixed to bottom */}
-      <div className="fixed bottom-0 left-0 right-0 px-4 py-6 bg-white">
-        <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-full px-4 py-3 shadow-lg max-w-md mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 px-5 py-6 bg-white">
+        <div className="flex items-center gap-3 max-w-md mx-auto">
 
-          {/* Plus Icon */}
-          <button className="text-2xl text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
-            +
+          {/* Plus Button - Separate Circle */}
+          <button
+            className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
+            style={{ backgroundColor: '#FFFFFF', border: '1.5px solid #E5E5E5' }}
+          >
+            <span className="text-[24px]" style={{ color: '#757575' }}>+</span>
           </button>
 
-          {/* Input Field */}
-          <input
-            type="text"
-            placeholder="Ask Deepenk"
-            className="flex-1 outline-none text-base placeholder-gray-400 bg-transparent font-normal"
-          />
+          {/* Input Container */}
+          <div
+            className="flex-1 flex items-center gap-3 px-4 py-3 rounded-full"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 6px 18px rgba(0, 0, 0, 0.08)',
+              border: '1px solid #F0F0F0'
+            }}
+          >
+            {/* Input Field */}
+            <input
+              type="text"
+              placeholder="Ask Deepenk"
+              className="flex-1 outline-none text-[15px] bg-transparent"
+              style={{ color: '#111111' }}
+            />
 
-          {/* Voice Icon */}
-          <button className="text-black hover:text-gray-600 transition-colors flex-shrink-0">
-            <BsMicFill className="text-lg" />
-          </button>
+            {/* Voice Icon */}
+            <button className="flex-shrink-0 transition-all active:scale-95">
+              <BsMicFill className="text-[18px]" style={{ color: '#111111' }} />
+            </button>
 
-          {/* Send Button */}
-          <button className="bg-black hover:bg-gray-800 rounded-full p-2.5 transition-colors flex-shrink-0">
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </button>
+            {/* Send Button */}
+            <button
+              className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
+              style={{ backgroundColor: '#000000' }}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="#FFFFFF" viewBox="0 0 24 24" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </div>
 
         </div>
       </div>
