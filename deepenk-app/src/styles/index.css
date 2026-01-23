@@ -18,5 +18,20 @@
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Mobile optimizations */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Ensure mobile-first layout */
+  html {
+    overflow-x: hidden;
+  }
+
+  /* Better touch targets for mobile */
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 }

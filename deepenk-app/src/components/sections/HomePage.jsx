@@ -5,75 +5,75 @@ import { BsMicFill } from 'react-icons/bs'
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-white relative">
+    <div className="min-h-screen flex flex-col bg-white relative pb-32">
 
       {/* Center Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-8 pb-40">
+      <div className="flex-1 flex flex-col items-center justify-center px-6">
 
         {/* Logo */}
-        <div className="mb-12">
+        <div className="mb-8">
           <img
             src={logoImg}
             alt="Deepenk Logo"
-            className="w-28 h-28 object-contain"
+            className="w-20 h-20 object-contain"
           />
         </div>
 
         {/* Main Heading */}
-        <h1 className="text-[64px] font-extrabold leading-tight text-center mb-16 text-black max-w-5xl">
-          What do you want choose today?
+        <h1 className="text-[32px] font-bold leading-tight text-center mb-8 text-black max-w-sm">
+          what do you want to choose today?
         </h1>
 
         {/* Action Buttons */}
-        <div className="flex gap-4 flex-wrap justify-center">
-
-          <button className="flex items-center gap-2 px-6 py-3 bg-[#D9D9D9] hover:bg-gray-300 rounded-[25px] transition-colors">
-            <span className="text-xl">📍</span>
-            <span className="font-semibold text-[18px] text-[#1F2937]">Book a ride</span>
-          </button>
-
-          <button className="flex items-center gap-2 px-6 py-3 bg-[#D9D9D9] hover:bg-gray-300 rounded-[25px] transition-colors">
-            <span className="text-xl">🍕</span>
-            <span className="font-semibold text-[18px] text-[#1F2937]">Order food</span>
-          </button>
-
-          <button className="flex items-center gap-2 px-6 py-3 bg-[#D9D9D9] hover:bg-gray-300 rounded-[25px] transition-colors">
-            <span className="text-xl">🎫</span>
-            <span className="font-semibold text-[18px] text-[#1F2937]">Book a ticket</span>
-          </button>
-
+        <div className="flex flex-col gap-3 w-full max-w-xs mb-6">
+          <div className="flex gap-3">
+            <button className="flex-1 px-4 py-2.5 bg-[#D9D9D9] hover:bg-gray-300 rounded-full transition-colors">
+              <span className="font-semibold text-sm text-black">Book a Ride</span>
+            </button>
+            <button className="flex-1 px-4 py-2.5 bg-[#D9D9D9] hover:bg-gray-300 rounded-full transition-colors">
+              <span className="font-semibold text-sm text-black">Book a Ticket</span>
+            </button>
+          </div>
+          <div className="flex gap-3">
+            <button className="flex-1 px-4 py-2.5 bg-[#D9D9D9] hover:bg-gray-300 rounded-full transition-colors">
+              <span className="font-semibold text-sm text-black">Order a Food</span>
+            </button>
+            <button className="px-4 py-2.5 bg-[#D9D9D9] hover:bg-gray-300 rounded-full transition-colors">
+              <span className="font-semibold text-sm text-black">Shopping</span>
+            </button>
+          </div>
         </div>
+
       </div>
 
       {/* Bottom Input Section - Fixed to bottom */}
-      <div className="fixed bottom-0 left-64 right-0 px-16 py-8 bg-white">
-        <div className="max-w-3xl mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 px-4 py-6 bg-white">
+        <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-full px-4 py-3 shadow-lg max-w-md mx-auto">
 
-          <div className="flex items-center gap-4 bg-white border border-gray-200 rounded-full px-6 py-4 shadow-sm">
+          {/* Plus Icon */}
+          <button className="text-2xl text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
+            +
+          </button>
 
-            {/* Plus Icon */}
-            <button className="text-2xl text-black hover:text-gray-600 transition-colors flex-shrink-0">
-              +
-            </button>
+          {/* Input Field */}
+          <input
+            type="text"
+            placeholder="Ask Deepenk"
+            className="flex-1 outline-none text-base placeholder-gray-400 bg-transparent font-normal"
+          />
 
-            {/* Input Field */}
-            <input
-              type="text"
-              placeholder="Ask Deepenk"
-              className="flex-1 outline-none text-lg placeholder-gray-400 bg-transparent font-normal"
-            />
+          {/* Voice Icon */}
+          <button className="text-black hover:text-gray-600 transition-colors flex-shrink-0">
+            <BsMicFill className="text-lg" />
+          </button>
 
-            {/* Voice Icon */}
-            <button className="text-black hover:text-gray-600 transition-colors flex-shrink-0">
-              <BsMicFill className="text-xl" />
-            </button>
+          {/* Send Button */}
+          <button className="bg-black hover:bg-gray-800 rounded-full p-2.5 transition-colors flex-shrink-0">
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
 
-            {/* Send Button */}
-            <button className="bg-[#D9D9D9] hover:bg-gray-300 rounded-full p-3 transition-colors flex-shrink-0">
-              <img src={submitIcon} alt="Send" className="w-5 h-5 object-contain" />
-            </button>
-
-          </div>
         </div>
       </div>
 
