@@ -26,16 +26,14 @@ const MobileHeader = ({ onMenuToggle }) => {
         </svg>
       </button>
 
-      {/* Center Logo + Brand Name */}
-      <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
-        <img
-          src={logoImg}
-          alt="Deepenk"
-          className="w-5 h-5 object-contain"
-        />
-        <span className="text-[18px] font-semibold text-[#111111]">
-          Deepenk
-        </span>
+      {/* Login and Sign In buttons on the right */}
+      <div className="ml-auto flex gap-3">
+        <button className="px-4 py-2 bg-gray-200 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors">
+          Login
+        </button>
+        <button className="px-4 py-2 bg-gray-200 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors">
+          Sign In
+        </button>
       </div>
     </header>
   );
