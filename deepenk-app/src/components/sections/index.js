@@ -1,0 +1,7 @@
+export { default as HomePage } from './HomePage'
+export { default as HistoryPage } from './HistoryPage'
+export { default as ShoppingPage } from './ShoppingPage'
+export { default as FoodPage } from './FoodPage'
+export { default as RidesPage } from './RidesPage'
+export { default as TravelsPage } from './TravelsPage'
+export { default as HotelsPage } from './HotelsPage'
