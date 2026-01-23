@@ -15,7 +15,7 @@ const HomePage = () => {
         <div>what do you want</div>
         <div>to choose today?</div>
       </h1>
-      <div> </div>
+
       {/* Buttons - 3 in first row, 1 in second row */}
       <div className="w-full max-w-md mb-6">
         {/* First row - 3 buttons */}
