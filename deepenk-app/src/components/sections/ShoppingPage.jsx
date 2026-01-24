@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { BsMicFill } from 'react-icons/bs'
 import logoImg from '../../assets/sidebar/logo.png';
 
@@ -48,19 +48,34 @@ const ShoppingPage = () => {
     }
   ]
 
+  const [cardQuery, setCardQuery] = useState('')
+  const headerRef = useRef(null)
+  const [contentPadding, setContentPadding] = useState(0)
+
+  useEffect(() => {
+    const calc = () => {
+      if (headerRef.current) setContentPadding(headerRef.current.offsetHeight + 12)
+    }
+    calc()
+    window.addEventListener('resize', calc)
+    return () => window.removeEventListener('resize', calc)
+  }, [])
+
   return (
     <div className="min-h-screen bg-white pb-8">
-      {/* Search Bar - Fixed at top */}
-      <div className="sticky top-0 left-0 right-0 bg-white z-30 px-4 pt-2 pb-3 border-b border-gray-200">
+      {/* Search Bar - Fixed at top below MobileHeader (fixed so it never scrolls) */}
+      <div ref={headerRef} className="fixed top-14 left-0 right-0 bg-white z-40 px-4 pt-2 pb-3 border-b border-gray-200">
         {/* Plus Button + Search Input */}
         <div className="flex items-center gap-3 mb-3">
           <button
-            className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 border border-gray-200 bg-white shadow-md"
+            className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 border border-gray-200 bg-white"
+            style={{ boxShadow: '0 8px 20px rgba(0,0,0,0.08)' }}
           >
             <span className="text-2xl" style={{ color: '#757575' }}>+</span>
           </button>
           <div
-            className="flex-1 flex items-center gap-4 px-6 py-4 rounded-full border border-gray-200 bg-white shadow-md"
+            className="flex-1 flex items-center gap-4 px-6 py-4 rounded-full border border-gray-200 bg-white"
+            style={{ boxShadow: '0 12px 30px rgba(0,0,0,0.06)' }}
           >
             <input
               type="text"
@@ -101,9 +116,32 @@ const ShoppingPage = () => {
             </button>
           ))}
         </div>
+
+        {/* Small query card inside fixed header so it's non-moving */}
+        <div className="w-full mt-2 px-2">
+          <div className="w-full bg-white rounded-xl border-2 border-black px-3 py-2 flex items-center" style={{borderRadius: 18}}>
+            <input
+              aria-label="Quick query"
+              value={cardQuery}
+              onChange={(e) => setCardQuery(e.target.value)}
+              className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500 min-w-0"
+              placeholder="which type of loptop you need ?"
+              style={{color: '#111', paddingLeft: 6}}
+            />
+            <button
+              onClick={() => console.log('Query submitted:', cardQuery)}
+              className="ml-3 flex items-center gap-2 bg-white border border-black px-3 py-1 rounded-full text-sm font-medium hover:bg-gray-50"
+            >
+              <span>Next</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 8.25L18 12m0 0l-4.5 3.75M18 12H6" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
-      {/* Main Content - with top padding for fixed header */}
-      <div className="px-2 pt-4">
+      {/* Main Content - with top padding for fixed header (calculated) */}
+      <div className="px-2" style={{ paddingTop: contentPadding }}>
         {/* Featured Product Card - Figma Style */}
         <div
           className="rounded-2xl border border-gray-300 bg-white mb-6 shadow-md overflow-hidden flex flex-col w-full"
@@ -250,6 +288,7 @@ const ShoppingPage = () => {
           </div>
         </div>
       </div>
+      {/* FooterNote now provided globally in Layout */}
     </div>
   )
 }

@@ -53,26 +53,24 @@ const HistoryPage = () => {
   })
 
   return (
-    <div className="min-h-screen bg-white px-4 pt-20 pb-8">
-      {/* Page Title */}
-      <h1
-        className="text-[32px] font-bold mb-6"
-        style={{ color: '#111111' }}
-      >
+    <div className="min-h-screen bg-white px-4 pt-16 pb-8">
+
+      {/* Page Title (centered like Figma) */}
+      <h1 className="text-[28px] font-extrabold text-center mb-4" style={{ color: '#111827' }}>
         Your Booking History
       </h1>
 
       {/* Filter Tabs */}
-      <div className="flex gap-2 mb-5 overflow-x-auto pb-2">
+      <div className="flex gap-3 mb-4 overflow-x-auto pb-2">
         {filters.map((filter) => (
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className="px-4 py-2 rounded-full whitespace-nowrap transition-all active:scale-95"
+            className={`px-4 py-2 whitespace-nowrap transition-all active:scale-95 ${activeFilter === filter ? 'rounded-full' : 'rounded-md'}`}
             style={{
               backgroundColor: activeFilter === filter ? '#FF6B35' : 'transparent',
-              color: activeFilter === filter ? '#FFFFFF' : '#757575',
-              fontWeight: activeFilter === filter ? '600' : '400',
+              color: activeFilter === filter ? '#FFFFFF' : '#6B7280',
+              fontWeight: activeFilter === filter ? 700 : 500,
               fontSize: '14px'
             }}
           >
@@ -80,21 +78,19 @@ const HistoryPage = () => {
           </button>
         ))}
       </div>
-
       {/* Search Bar */}
-      <div
-        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl mb-6"
-        style={{ backgroundColor: '#F5F5F5' }}
-      >
-        <BsSearch className="text-base" style={{ color: '#BDBDBD' }} />
-        <input
-          type="text"
-          placeholder="Search by place or booking..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="flex-1 outline-none text-sm bg-transparent"
-          style={{ color: '#111111' }}
-        />
+      <div className="w-full mb-6">
+        <div className="w-full flex items-center gap-3 px-4 py-3 rounded-full bg-[#F5F5F5]">
+          <BsSearch className="text-base" style={{ color: '#9CA3AF' }} />
+          <input
+            type="text"
+            placeholder="Search by place or booking..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="flex-1 outline-none text-sm bg-transparent min-w-0"
+            style={{ color: '#111827' }}
+          />
+        </div>
       </div>
 
       {/* Booking List */}
@@ -102,58 +98,40 @@ const HistoryPage = () => {
         {filteredBookings.map((booking) => (
           <div
             key={booking.id}
-            className="flex items-center gap-4 p-4 rounded-2xl"
-            style={{
-              backgroundColor: '#FFFFFF',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
-              border: '1px solid #F5F5F5'
-            }}
+            className="flex items-center gap-4 p-4 rounded-2xl bg-white"
+            style={{ boxShadow: '0 6px 18px rgba(15, 23, 42, 0.06)', border: '1px solid #F3F4F6' }}
           >
             {/* Icon */}
             <div
               className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: '#FFF9E6' }}
+              style={{ backgroundColor: booking.icon === '🍔' ? '#FFF3E0' : booking.icon === '🏍️' ? '#E6FFFA' : booking.icon === '🏖️' ? '#FFF7ED' : '#F0F9FF' }}
             >
               <span className="text-2xl">{booking.icon}</span>
             </div>
 
             {/* Content */}
             <div className="flex-1 min-w-0">
-              <h3
-                className="text-base font-semibold mb-0.5"
-                style={{ color: '#111111' }}
-              >
-                {booking.title}
-              </h3>
-              <p
-                className="text-xs"
-                style={{ color: '#757575' }}
-              >
-                {booking.date}
-              </p>
+              <h3 className="text-base font-semibold mb-0.5 text-gray-900 truncate">{booking.title}</h3>
+              <p className="text-xs text-gray-500">{booking.date}</p>
             </div>
 
             {/* Status Badge */}
-            <div
-              className="px-3 py-1.5 rounded-full flex-shrink-0"
-              style={{
-                backgroundColor: booking.statusColor,
-                color: booking.textColor
-              }}
-            >
-              <span className="text-xs font-medium">{booking.status}</span>
+            <div className="flex-shrink-0">
+              <div className="px-3 py-1.5 rounded-full text-xs font-medium" style={{ backgroundColor: booking.statusColor, color: booking.textColor }}>
+                {booking.status}
+              </div>
             </div>
           </div>
         ))}
 
         {filteredBookings.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-base" style={{ color: '#BDBDBD' }}>
-              No bookings found
-            </p>
+            <p className="text-base text-gray-400">No bookings found</p>
           </div>
         )}
       </div>
+
+      {/* FooterNote now provided globally in Layout */}
     </div>
   )
 }

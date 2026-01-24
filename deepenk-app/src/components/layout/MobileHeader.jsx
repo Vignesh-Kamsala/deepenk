@@ -1,10 +1,14 @@
 import React from "react";
 import logoImg from "../../assets/sidebar/logo.png";
 import { useAuthStore } from "../../store/authStore";
+import { useLocation } from 'react-router-dom'
 
 const MobileHeader = ({ onMenuToggle, showAuthButtons = false }) => {
+  const location = useLocation()
+  const isHistory = location.pathname === '/history' || location.pathname.includes('history')
+
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white z-40 px-4 py-3.5 flex items-center">
+    <header className={`fixed top-0 left-0 right-0 bg-white z-40 ${isHistory ? 'px-3 py-2' : 'px-4 py-3.5'} flex items-center`}>
       {/* Hamburger Menu (Left) */}
       <button
         onClick={onMenuToggle}
@@ -26,13 +30,13 @@ const MobileHeader = ({ onMenuToggle, showAuthButtons = false }) => {
           />
         </svg>
       </button>
-      {/* Logo and Heading */}
+      {/* Logo and optional Heading */}
       <img
         src={logoImg}
         alt="Deepenk Logo"
-        className="w-7 h-7 object-contain ml-2"
+        className={`object-contain ${isHistory ? 'w-6 h-6 ml-2' : 'w-7 h-7 ml-2'}`}
       />
-      <span className="font-bold text-lg ml-1">Deepenk</span>
+      {!isHistory && <span className="font-bold text-lg ml-1">Deepenk</span>}
       {/* Login and Sign In buttons on the right (only on Home) */}
       {showAuthButtons && (
         <div className="ml-auto flex gap-3">
