@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { BsMicFill } from 'react-icons/bs'
 import logoImg from '../../assets/sidebar/logo.png';
+import SearchMapModal from '../common/SearchMapModal'
 
 const ShoppingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -49,6 +50,7 @@ const ShoppingPage = () => {
   ]
 
   const [cardQuery, setCardQuery] = useState('')
+  const [showSearchModal, setShowSearchModal] = useState(false)
   const headerRef = useRef(null)
   const [contentPadding, setContentPadding] = useState(0)
 
@@ -74,13 +76,17 @@ const ShoppingPage = () => {
             <span className="text-2xl" style={{ color: '#757575' }}>+</span>
           </button>
           <div
+            role="button"
+            tabIndex={0}
+            onClick={() => setShowSearchModal(true)}
             className="flex-1 flex items-center gap-4 px-6 py-4 rounded-full border border-gray-200 bg-white"
             style={{ boxShadow: '0 12px 30px rgba(0,0,0,0.06)' }}
           >
             <input
               type="text"
-              placeholder="Ask Deepenk"
-              className="flex-1 outline-none text-[17px] bg-transparent"
+              readOnly
+              placeholder="Type brifely what you want"
+              className="flex-1 outline-none text-[15px] bg-transparent cursor-pointer"
               style={{ color: '#111111' }}
             />
             <button className="flex-shrink-0">
@@ -288,6 +294,9 @@ const ShoppingPage = () => {
           </div>
         </div>
       </div>
+      {showSearchModal && (
+        <SearchMapModal onClose={() => setShowSearchModal(false)} />
+      )}
       {/* FooterNote now provided globally in Layout */}
     </div>
   )
