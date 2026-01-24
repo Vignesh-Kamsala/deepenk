@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { BsMicFill } from 'react-icons/bs'
 
 const FoodPage = () => {
@@ -49,15 +49,28 @@ const FoodPage = () => {
     }
   ]
 
+  const [cardQuery, setCardQuery] = useState('')
+  const headerRef = useRef(null)
+  const [contentPadding, setContentPadding] = useState(0)
+
+  useEffect(() => {
+    const calc = () => {
+      if (headerRef.current) setContentPadding(headerRef.current.offsetHeight + 12)
+    }
+    calc()
+    window.addEventListener('resize', calc)
+    return () => window.removeEventListener('resize', calc)
+  }, [])
+
   return (
     <div className="min-h-screen bg-white pb-8">
-      {/* Search Bar - Fixed at top */}
-      <div className="fixed top-16 left-0 right-0 bg-white z-30 px-4 pt-4 pb-3">
+      {/* Search Bar - Fixed at top (header) */}
+      <div ref={headerRef} className="fixed top-14 left-0 right-0 bg-white z-40 px-4 pt-3 pb-3 border-b border-gray-100">
         {/* Plus Button + Search Input */}
         <div className="flex items-center gap-3 mb-4">
           <button
             className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
-            style={{ backgroundColor: '#FFFFFF', border: '1.5px solid #E5E5E5' }}
+            style={{ backgroundColor: '#FFFFFF', border: '1.5px solid #E5E5E5', boxShadow: '0 8px 20px rgba(0,0,0,0.08)' }}
           >
             <span className="text-[24px]" style={{ color: '#757575' }}>+</span>
           </button>
@@ -66,7 +79,8 @@ const FoodPage = () => {
             className="flex-1 flex items-center gap-3 px-4 py-3 rounded-full"
             style={{
               backgroundColor: '#F5F5F5',
-              border: '1px solid #E5E5E5'
+              border: '1px solid #E5E5E5',
+              boxShadow: '0 12px 30px rgba(0,0,0,0.06)'
             }}
           >
             <input
@@ -110,153 +124,80 @@ const FoodPage = () => {
             </button>
           ))}
         </div>
-      </div>
 
-      {/* Main Content - with top padding for fixed header */}
-      <div className="px-4 pt-44">
-        {/* Featured Dish Card */}
-        <div
-          className="rounded-3xl overflow-hidden mb-6"
-          style={{
-            backgroundColor: '#FFFFFF',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-            border: '1px solid #F0F0F0'
-          }}
-        >
-          {/* Image Section */}
-          <div className="relative">
-            <div
-              className="w-full h-48 flex items-center justify-center"
-              style={{ backgroundColor: '#F5F5F5' }}
-            >
-              <span className="text-6xl">🍖</span>
-            </div>
-
-            {/* Platform Badge */}
-            <div
-              className="absolute top-3 left-3 px-2 py-1 rounded flex items-center gap-1"
-              style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
-            >
-              <span className="text-xs font-bold" style={{ color: '#E23744' }}>Zomato</span>
-            </div>
-
-            {/* Best Match Badge */}
-            <div
-              className="absolute top-3 right-3 px-2.5 py-1 rounded-full"
-              style={{ backgroundColor: '#10B981' }}
-            >
-              <span className="text-[10px] font-bold text-white">BEST MATCH</span>
-            </div>
-          </div>
-
-          {/* Content Section */}
-          <div className="p-4">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <h3 className="text-lg font-bold mb-0.5" style={{ color: '#111111' }}>
-                  Chicken kabab's
-                </h3>
-                <p className="text-sm mb-2" style={{ color: '#757575' }}>
-                  Lotus Palace
-                </p>
-                <div className="flex items-center gap-3">
-                  <span className="text-xl font-bold" style={{ color: '#111111' }}>₹299</span>
-                  <div className="flex items-center gap-1">
-                    <span className="text-yellow-500">⭐</span>
-                    <span className="text-sm font-medium" style={{ color: '#111111' }}>4.3</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Order Button */}
+        {/* Small query card inside fixed header */}
+        <div className="w-full mt-2 px-2">
+          <div className="w-full bg-white rounded-xl border border-black px-3 py-2 flex items-center" style={{borderRadius: 16}}>
+            <input
+              aria-label="Quick query"
+              value={cardQuery}
+              onChange={(e) => setCardQuery(e.target.value)}
+              className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500 min-w-0"
+              placeholder="what type of biryani you need"
+              style={{color: '#111', paddingLeft: 6}}
+            />
             <button
-              className="w-full py-3 rounded-full flex items-center justify-center gap-2 transition-all active:scale-98"
-              style={{ backgroundColor: '#E23744' }}
+              onClick={() => console.log('Food query:', cardQuery)}
+              className="ml-3 flex items-center gap-2 bg-white border border-black px-3 py-1 rounded-full text-sm font-medium hover:bg-gray-50"
             >
-              <span className="text-sm font-semibold text-white">Order in Zomato</span>
-              <svg className="w-4 h-4" fill="none" stroke="white" viewBox="0 0 24 24" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              <span>Next</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 8.25L18 12m0 0l-4.5 3.75M18 12H6" />
               </svg>
             </button>
           </div>
+        </div>
+      </div>
 
-          {/* Deepenk Insights Section */}
-          <div
-            className="px-4 pb-4"
-            style={{ borderTop: '1px solid #F0F0F0' }}
-          >
-            <div className="flex items-center justify-between pt-4 mb-3">
-              <h4 className="text-sm font-bold" style={{ color: '#111111' }}>
-                DEEPENK INSIGHTS
-              </h4>
-              <button className="text-gray-400">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="6" r="1.5" />
-                  <circle cx="12" cy="12" r="1.5" />
-                  <circle cx="12" cy="18" r="1.5" />
-                </svg>
+      {/* Main Content - with top padding for fixed header (calculated) */}
+      <div className="px-4" style={{ paddingTop: contentPadding }}>
+        {/* Featured Dish Card - side-by-side like ShoppingPage */}
+        <div className="rounded-2xl border border-gray-200 bg-white mb-6 shadow-md overflow-hidden flex flex-col w-full">
+          <div className="flex flex-row gap-3 p-4 pb-0">
+            <div className="flex-shrink-0 flex items-start justify-center">
+              <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" alt="dish" className="w-24 h-20 object-contain rounded-xl border border-gray-200" />
+            </div>
+            <div className="flex-1 flex flex-col gap-1">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="bg-green-500 text-white text-[10px] font-bold rounded-full px-2 py-0.5">BEST MATCH</span>
+              </div>
+              <h3 className="text-base font-bold text-gray-900 leading-tight">{featuredDish.name}</h3>
+              <p className="text-xs text-gray-500">{featuredDish.restaurant}</p>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-lg font-bold text-gray-900">{featuredDish.price}</span>
+                <span className="flex items-center gap-1 text-yellow-500 text-sm font-medium">⭐ {featuredDish.rating}</span>
+              </div>
+              <button className="w-full py-2.5 rounded-full flex items-center justify-center gap-2 transition-all active:scale-98 shadow-lg mt-1 mb-2" style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)', boxShadow: '0 4px 16px 0 rgba(255,111,0,0.15)' }}>
+                <span className="text-base font-bold text-white">{featuredDish.orderButton}</span>
+                <svg className="w-5 h-5" fill="none" stroke="white" viewBox="0 0 24 24" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
               </button>
             </div>
+          </div>
 
-            {/* AI Review Summary */}
-            <div className="mb-3">
-              <h5 className="text-xs font-bold mb-1" style={{ color: '#111111' }}>
-                AI Review Summary
-              </h5>
-              <p className="text-[11px] leading-relaxed" style={{ color: '#757575' }}>
-                Most users say biryani is rich in flavor, well-spiced, and aromatic.
-                Rice is long-grain and fluffy, meat is tender and juicy.
-              </p>
+          <div className="border-t border-gray-200 p-3 bg-white w-full">
+            <h4 className="text-xs font-bold mb-1 text-gray-900">DEEPENK INSIGHTS</h4>
+            <div className="mb-1">
+              <span className="block text-[11px] font-bold text-gray-900 mb-0.5">AI Review Summary</span>
+              <span className="block text-[11px] text-gray-600">Most users say biryani is rich in flavor, well-spiced, and aromatic. Rice is long-grain and fluffy, meat is tender and juicy.</span>
             </div>
-
-            {/* Bundle Suggestion */}
-            <div className="mb-3">
-              <h5 className="text-xs font-bold mb-1" style={{ color: '#111111' }}>
-                Bundle Suggestion
-              </h5>
-              <p className="text-[11px]" style={{ color: '#757575' }}>
-                Tumps-up + Franch Frice 20% off<br />
-                CoCola 10% off
-              </p>
+            <div className="mb-1">
+              <span className="block text-[11px] font-bold text-gray-900 mb-0.5">Bundle Suggestion</span>
+              <span className="block text-[11px] text-gray-600">Tumps-up + Franch Frice 20% off<br />CoCola 10% off</span>
             </div>
-
-            {/* Applied Offers */}
-            <div className="mb-3">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm">💳</span>
-                <h5 className="text-xs font-bold" style={{ color: '#111111' }}>
-                  Applied offers and Coupons
-                </h5>
-              </div>
-              <ul className="space-y-0.5 ml-6">
-                <li className="text-[11px]" style={{ color: '#757575' }}>
-                  • New-user coupon DE****6 applied
-                </li>
-                <li className="text-[11px]" style={{ color: '#757575' }}>
-                  • SBI Credit Card applied
-                </li>
-                <li className="text-[11px]" style={{ color: '#757575' }}>
-                  • Delivery fee waived
-                </li>
+            <div className="mb-1">
+              <span className="block text-[11px] font-bold text-gray-900 mb-0.5">Applied offers and Coupons</span>
+              <ul className="list-disc ml-4 text-[11px] text-gray-600">
+                <li>New-user coupon DE****6 applied</li>
+                <li>SBI Credit Card applied</li>
+                <li>Delivery fee waived</li>
               </ul>
             </div>
-
-            {/* Payment Suggestion */}
             <div>
-              <h5 className="text-xs font-bold mb-1" style={{ color: '#111111' }}>
-                Payment Suggestion
-              </h5>
-              <ul className="space-y-0.5">
-                <li className="text-[11px]" style={{ color: '#757575' }}>
-                  Paytm UPI → Get 20% cashback (₹40)
-                </li>
-                <li className="text-[11px]" style={{ color: '#757575' }}>
-                  PhonePe UPI → Scratch card rewards
-                </li>
-                <li className="text-[11px]" style={{ color: '#757575' }}>
-                  Google Pay → Instant ₹25 off
-                </li>
+              <span className="block text-[11px] font-bold text-gray-900 mb-0.5">Payment Suggestion</span>
+              <ul className="list-disc ml-4 text-[11px] text-gray-600">
+                <li>Paytm UPI → Get 20% cashback (₹40)</li>
+                <li>PhonePe UPI → Scratch card rewards</li>
+                <li>Google Pay → Instant ₹25 off</li>
               </ul>
             </div>
           </div>

@@ -27,14 +27,14 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"
+          className="fixed inset-0 bg-transparent z-40 transition-opacity"
           onClick={onClose}
         />
       )}
 
       {/* Drawer */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-64 bg-white flex flex-col z-50 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed left-0 top-0 h-screen w-full max-w-xs sm:max-w-sm md:max-w-md bg-white flex flex-col z-50 shadow-xl rounded-r-3xl transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         style={{ borderRight: '1px solid #E5E5E5' }}
       >
