@@ -1,7 +1,8 @@
 import React from "react";
 import logoImg from "../../assets/sidebar/logo.png";
+import { useAuthStore } from "../../store/authStore";
 
-const MobileHeader = ({ onMenuToggle }) => {
+const MobileHeader = ({ onMenuToggle, showAuthButtons = false }) => {
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-40 px-4 py-3.5 flex items-center">
       {/* Hamburger Menu (Left) */}
@@ -25,16 +26,30 @@ const MobileHeader = ({ onMenuToggle }) => {
           />
         </svg>
       </button>
-
-      {/* Login and Sign In buttons on the right */}
-      <div className="ml-auto flex gap-3">
-        <button className="px-4 py-2 bg-gray-200 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors">
-          Login
-        </button>
-        <button className="px-4 py-2 bg-gray-200 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors">
-          Sign In
-        </button>
-      </div>
+      {/* Logo and Heading */}
+      <img
+        src={logoImg}
+        alt="Deepenk Logo"
+        className="w-7 h-7 object-contain ml-2"
+      />
+      <span className="font-bold text-lg ml-1">Deepenk</span>
+      {/* Login and Sign In buttons on the right (only on Home) */}
+      {showAuthButtons && (
+        <div className="ml-auto flex gap-3">
+          <button
+            onClick={() => useAuthStore.getState().openLoginModal()}
+            className="px-4 py-2 bg-gray-200 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors"
+          >
+            Login
+          </button>
+          <button
+            onClick={() => useAuthStore.getState().openLoginModal()}
+            className="px-4 py-2 bg-gray-200 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors"
+          >
+            Sign In
+          </button>
+        </div>
+      )}
     </header>
   );
 };
