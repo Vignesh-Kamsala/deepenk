@@ -3,7 +3,6 @@ import Sidebar from './Sidebar'
 import MobileHeader from './MobileHeader'
 import { LoginModal } from '../auth'
 import FeedbackButton from '../common/FeedbackButton'
-import FooterNote from '../common/FooterNote'
 import { useLocation } from 'react-router-dom'
 
 const Layout = ({ children }) => {
@@ -18,9 +17,8 @@ const Layout = ({ children }) => {
     <div className="flex min-h-screen bg-white">
       <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
       <MobileHeader onMenuToggle={toggleSidebar} showAuthButtons={isHome} />
-      <main className="flex-1 pt-16 overflow-x-hidden pb-24">
+      <main className="flex-1 pt-16 overflow-x-hidden">
         {children}
-        <FooterNote />
       </main>
       <FeedbackButton />
       <LoginModal />

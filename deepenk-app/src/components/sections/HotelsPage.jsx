@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { BsMicFill } from 'react-icons/bs'
 
 const COLORS = {
@@ -36,12 +36,12 @@ function StyledButton({ children, variant = 'default', style, ...rest }) {
 
 function SearchBar({ onSend }) {
   return (
-    <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-      <StyledButton variant="circle" aria-label="plus">+</StyledButton>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, background: COLORS.inputBg, padding: '12px 16px', borderRadius: 999, border: `1px solid ${COLORS.border}` }}>
-        <input placeholder="Ask Deepenk" style={{ flex: 1, border: 'none', outline: 'none', fontSize: 15, color: COLORS.text, background: 'transparent' }} />
+    <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+      <StyledButton variant="circle" aria-label="plus" style={{ boxShadow: '0 6px 14px rgba(0,0,0,0.08)' }}>+</StyledButton>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, background: '#F7F7F7', padding: '12px 16px', borderRadius: 999, border: `1px solid #D9D9D9`, boxShadow: '0 6px 18px rgba(0,0,0,0.08)' }}>
+        <input placeholder="Ask Deepenk" style={{ flex: 1, border: 'none', outline: 'none', fontSize: 15, color: COLORS.text, background: 'transparent', paddingTop: 2 }} />
         <button aria-label="mic" style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}><BsMicFill style={{ color: COLORS.text, fontSize: 18 }} /></button>
-        <button aria-label="send" onClick={onSend} style={{ width: 36, height: 36, borderRadius: 999, background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}>
+        <button aria-label="send" onClick={onSend} style={{ width: 38, height: 38, borderRadius: 999, background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}>
           <svg className="w-4 h-4" fill="none" stroke="#FFFFFF" viewBox="0 0 24 24" strokeWidth={2.5} width="16" height="16">
             <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
@@ -51,8 +51,13 @@ function SearchBar({ onSend }) {
   )
 }
 
+const HERO_IMG = 'https://images.unsplash.com/photo-1501117716987-c8e1ecb210af?auto=format&fit=crop&w=1200&q=80'
+const ALT_IMG = 'https://images.unsplash.com/photo-1509057199576-632a47484ece?auto=format&fit=crop&w=800&q=80'
+
 const HotelsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
+  const headerRef = useRef(null)
+  const [contentPadding, setContentPadding] = useState(320)
 
   const categories = [
     { id: 1, emoji: '🏨', label: 'Hotels' },
@@ -67,10 +72,11 @@ const HotelsPage = () => {
     rating: '4.8',
     reviews: '1,234',
     price: '₹499',
+    image: HERO_IMG,
     amenities: [
       { icon: '📶', text: 'Free Wi-Fi' },
       { icon: '🍳', text: 'Breakfast Included' },
-      { icon: '❌', text: 'Free Cancellation' }
+      { icon: '✅', text: 'Free Cancellation' }
     ],
     description: 'This hotel offers the best overall value for your stay right now.',
     features: [
@@ -86,100 +92,123 @@ const HotelsPage = () => {
       id: 1,
       name: 'City Comfort Inn',
       priceRange: '₹899-₹1120',
-      category: 'Budget-friendly'
+      category: 'Budget-friendly',
+      image: ALT_IMG
     },
     {
       id: 2,
       name: 'City Comfort Inn',
       priceRange: '₹999-₹1120',
-      category: 'Budget-friendly'
+      category: 'Budget-friendly',
+      image: ALT_IMG
     },
     {
       id: 3,
       name: 'City Comfort Inn',
       priceRange: '₹1120-₹1210',
-      category: 'Budget-friendly'
+      category: 'Budget-friendly',
+      image: ALT_IMG
     }
   ]
 
+  useEffect(() => {
+    const calc = () => {
+      if (headerRef.current) {
+        setContentPadding(headerRef.current.offsetHeight + 12)
+      }
+    }
+    calc()
+    window.addEventListener('resize', calc)
+    return () => window.removeEventListener('resize', calc)
+  }, [])
+
   return (
-    <div className="min-h-screen bg-white pb-8">
+    <div className="min-h-screen" style={{ background: '#f7f7fb' }}>
       {/* Search Bar - Fixed at top */}
-      <div className="fixed top-16 left-0 right-0 bg-white z-30 px-4 pt-4 pb-3">
-        <div className="mb-4">
-          <SearchBar onSend={() => {}} />
-        </div>
+      <div ref={headerRef} className="fixed top-14 left-0 right-0 z-30">
+        <div className="max-w-[440px] mx-auto bg-white px-4 pt-4 pb-3 shadow-sm" style={{ borderBottom: '1px solid #ececec' }}>
+          <div className="mb-4">
+            <SearchBar onSend={() => {}} />
+          </div>
 
-        {/* Header Text */}
-        <div className="mb-3">
-          <h2 className="text-base font-bold mb-1" style={{ color: COLORS.text }}>
-            Book Your Stay with Confidence
-          </h2>
-          <p className="text-xs leading-relaxed" style={{ color: COLORS.muted }}>
-            Deepenk helps you find the best hotel by comparing price, comfort, reviews, and availability.
-          </p>
-        </div>
+          {/* Header Text */}
+          <div className="mb-3 text-center">
+            <h2 className="text-base font-bold mb-1" style={{ color: COLORS.text }}>
+              Book Your Stay with Confidence
+            </h2>
+            <p className="text-xs leading-relaxed" style={{ color: COLORS.muted }}>
+              Deepenk helps you find the best hotel by comparing price, comfort, reviews, and availability.
+            </p>
+          </div>
 
-        {/* Category Icons */}
-        <div className="flex gap-3 mb-3 overflow-x-auto pb-2" style={{ WebkitOverflowScrolling: 'touch' }}>
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className="flex-shrink-0 flex flex-col items-center gap-1 transition-all active:scale-95"
-            >
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center"
-                style={{
-                  backgroundColor: selectedCategory === category.id ? '#FFF9E6' : COLORS.inputBg,
-                  border: selectedCategory === category.id ? '2px solid #FFD700' : `1px solid ${COLORS.border}`
-                }}
+          {/* Category Icons */}
+          <div className="flex gap-4 mb-3 overflow-x-auto pb-2 justify-center" style={{ WebkitOverflowScrolling: 'touch' }}>
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className="flex-shrink-0 flex flex-col items-center gap-2 transition-all active:scale-95"
+                style={{ width: 85 }}
               >
-                <span className="text-2xl">{category.emoji}</span>
-              </div>
-              <span className="text-[10px]" style={{ color: COLORS.muted }}>{category.label}</span>
-            </button>
-          ))}
-        </div>
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                  style={{
+                    backgroundColor: '#FFFFFF',
+                    border: selectedCategory === category.id ? '2px solid #10B981' : `1px solid ${COLORS.border}`,
+                    boxShadow: '0 1px 6px rgba(0,0,0,0.06)'
+                  }}
+                >
+                  <span className="text-2xl">{category.emoji}</span>
+                </div>
+                <span className="text-[11px] text-center" style={{ color: COLORS.muted }}>{category.label}</span>
+              </button>
+            ))}
+          </div>
 
-        {/* Filter Buttons */}
-        <div className="flex gap-2 mb-3">
-          <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Enter Destination</StyledButton>
-          <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Check-in: May 12</StyledButton>
-        </div>
+          {/* Filter Inputs - arranged to match screenshot */}
+          <div className="mb-3">
+            <div className="flex items-center gap-2 mb-2">
+              <input 
+                type="text" 
+                placeholder="Enter Destination" 
+                className="px-4 py-2 rounded-full text-sm bg-gray-100 border border-gray-300 outline-none"
+                style={{ fontSize: 18, width: '190px' }}
+              />
+              <input 
+                type="text" 
+                placeholder="Check-in: May 12" 
+                className="px-4 py-2 rounded-full text-sm bg-gray-100 border border-gray-300 outline-none"
+                style={{ fontSize: 18, width: '190px' }}
+              />
+            </div>
 
-        <div className="flex gap-2 mb-3">
-          <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Check-out: May 15</StyledButton>
-          <StyledButton variant="primary" style={{ padding: '8px 16px', fontSize: 13 }}>Find Hotels →</StyledButton>
+            <div className="flex items-center gap-2">
+              <input 
+                type="text" 
+                placeholder="Check-out: May 15" 
+                className="px-4 py-2 rounded-full text-sm bg-gray-100 border border-gray-300 outline-none"
+                style={{ fontSize: 18, width: '190px' }}
+              />
+              <StyledButton variant="primary" style={{ padding: '10px 20px', fontSize: 18, width: '190px' }}>Find Hotels →</StyledButton>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Main Content - with top padding for fixed header */}
-      <div className="px-4" style={{ paddingTop: '340px' }}>
+      <div className="px-4 max-w-[440px] mx-auto" style={{ paddingTop: contentPadding }}>
         {/* Featured Hotel Card */}
         <div
           className="rounded-3xl overflow-hidden mb-6"
           style={{
             backgroundColor: '#FFFFFF',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-            border: '1px solid #F0F0F0'
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
+            border: '1px solid #E5E5E5'
           }}
         >
           {/* Image Section */}
           <div className="relative">
-            <div
-              className="w-full h-56 flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(135deg, #D4AF37 0%, #F4E4C1 100%)',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-            >
-              {/* Luxury hotel lobby placeholder */}
-              <div className="text-7xl">🏨</div>
-            </div>
-
-            {/* Best Choice Badge */}
+            <img src={featuredHotel.image} alt={featuredHotel.name} className="w-full h-56 object-cover" />
             <div
               className="absolute top-3 left-3 px-2.5 py-1 rounded-full"
               style={{ backgroundColor: '#10B981' }}
@@ -190,36 +219,35 @@ const HotelsPage = () => {
 
           {/* Hotel Info */}
           <div className="p-4">
-            <h3 className="text-xl font-bold mb-2" style={{ color: '#111111' }}>
-              Seaview Grand Hotel
+            <h3 className="text-xl font-bold mb-1" style={{ color: '#111111' }}>
+              {featuredHotel.name}
             </h3>
 
             {/* Rating */}
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-2">
               <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <svg key={star} width="14" height="14" viewBox="0 0 24 24" fill="#FF6F00" xmlns="http://www.w3.org/2000/svg">
+                  <svg key={star} width="16" height="16" viewBox="0 0 24 24" fill="#FF6F00" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 .587l3.668 7.431 8.2 1.193-5.934 5.79 1.402 8.175L12 18.896l-7.336 3.88 1.402-8.175L.132 9.211l8.2-1.193z" />
                   </svg>
                 ))}
               </div>
               <span className="text-sm font-semibold" style={{ color: '#111111' }}>{featuredHotel.rating}</span>
-              <span className="text-xs" style={{ color: '#757575' }}>({featuredHotel.reviews} reviews)</span>
             </div>
 
             {/* Price */}
             <div className="mb-3">
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold" style={{ color: '#111111' }}>₹499</span>
-                <span className="text-sm" style={{ color: '#757575' }}>/night</span>
+                <span className="text-2xl font-bold" style={{ color: '#111111' }}>{featuredHotel.price}</span>
+                <span className="text-sm" style={{ color: '#757575' }}>/ night</span>
               </div>
             </div>
 
             {/* Amenities */}
             <div className="space-y-2 mb-4">
               {featuredHotel.amenities.map((amenity, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <span className="text-base">{amenity.icon}</span>
+                <div key={index} className="flex items-center gap-2 text-sm" style={{ color: '#111111' }}>
+                  <span>{amenity.icon}</span>
                   <span className="text-xs" style={{ color: '#757575' }}>{amenity.text}</span>
                 </div>
               ))}
@@ -280,13 +308,8 @@ const HotelsPage = () => {
                 }}
               >
                 {/* Image */}
-                <div
-                  className="w-24 h-24 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{
-                    background: 'linear-gradient(135deg, #4A4A4A 0%, #2C2C2C 100%)'
-                  }}
-                >
-                  <span className="text-4xl">🛏️</span>
+                <div className="w-28 h-24 rounded-xl overflow-hidden flex-shrink-0">
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                 </div>
 
                 {/* Content */}

@@ -53,8 +53,8 @@ const HistoryPage = () => {
   })
 
   return (
-    <div className="min-h-screen bg-white px-4 pt-16 pb-8">
-
+    <div className="min-h-[calc(100vh-4rem)] bg-white px-4 pt-16 pb-4 flex flex-col">
+      <div className="flex-1">
       {/* Page Title (centered like Figma) */}
       <h1 className="text-[28px] font-extrabold text-center mb-4" style={{ color: '#111827' }}>
         Your Booking History
@@ -130,8 +130,12 @@ const HistoryPage = () => {
           </div>
         )}
       </div>
+      </div>
 
-      {/* FooterNote now provided globally in Layout */}
+      {/* Trial note at bottom */}
+      <div className="w-full px-4 mt-8">
+        <p className="text-[10px] text-gray-500 text-center leading-relaxed">Note: This is a trial version, so results may be limited, optimized and not real data. Your feedback will help us improve the final product with better features.</p>
+      </div>
     </div>
   )
 }
