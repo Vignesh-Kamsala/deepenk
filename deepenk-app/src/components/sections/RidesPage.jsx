@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
-import { BsSearch } from 'react-icons/bs'
+import { BsSearch, BsGeoAlt } from 'react-icons/bs'
+import { MdLocationOn } from 'react-icons/md'
 
 const RidesPage = () => {
   const [selectedTransport, setSelectedTransport] = useState(null)
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const [pickupLocation, setPickupLocation] = useState('')
+  const [dropLocation, setDropLocation] = useState('')
 
   const transportTypes = [
     { id: 1, emoji: '🏍️', label: 'Bike' },
@@ -86,23 +90,88 @@ const RidesPage = () => {
               <span>OLA</span>
             </div>
           </div>
+        </div>
 
-          {/* Search Input - positioned over map bottom */}
-          <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', bottom: '-28px', zIndex: 5, width: '92%' }}>
-            <div className="mx-auto flex items-center gap-3 px-5 py-3.5 rounded-full" style={{ border: '1.5px solid #E5E5E5', backgroundColor: '#FFFFFF', boxShadow: '0 8px 28px rgba(0,0,0,0.12)', maxWidth: 720 }}>
+        {/* Search Section - Outside of map */}
+        <div className="mt-6 px-4">
+          <div className="mx-auto" style={{ maxWidth: 720 }}>
+            {/* Main Search Bar */}
+            <div
+              className="flex items-center gap-3 px-5 py-3.5 rounded-full cursor-pointer"
+              style={{ border: '1.5px solid #E5E5E5', backgroundColor: '#FFFFFF', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
+              onClick={() => setIsSearchFocused(true)}
+            >
               <BsSearch className="text-lg flex-shrink-0" style={{ color: '#757575' }} />
-              <input type="text" placeholder="Where do you want to go?" className="flex-1 outline-none text-[15px] bg-transparent" style={{ color: '#111111' }} />
+              <input
+                type="text"
+                placeholder="Where do you want to go?"
+                className="flex-1 outline-none text-[15px] bg-transparent cursor-pointer"
+                style={{ color: '#111111' }}
+                readOnly
+              />
             </div>
+
+            {/* Description Text */}
+            <div className="mt-4 px-2">
+              <p className="text-center text-xs leading-relaxed" style={{ color: '#9E9E9E' }}>
+                Deepenk find's Best routs and prices from<br />
+                trusted ride partners
+              </p>
+            </div>
+
+            {/* Pickup and Drop Location Fields - Show when search is focused */}
+            {isSearchFocused && (
+              <div className="mt-4 space-y-3">
+                {/* Pickup Location */}
+                <div className="flex items-center gap-3 px-5 py-3.5 rounded-full" style={{ border: '1.5px solid #E5E5E5', backgroundColor: '#FFFFFF', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
+                  <MdLocationOn className="text-xl flex-shrink-0" style={{ color: '#111111' }} />
+                  <input
+                    type="text"
+                    placeholder="Pickup......"
+                    value={pickupLocation}
+                    onChange={(e) => setPickupLocation(e.target.value)}
+                    className="flex-1 outline-none text-[15px] bg-transparent"
+                    style={{ color: '#111111' }}
+                  />
+                </div>
+
+                {/* Drop Location */}
+                <div className="flex items-center gap-3 px-5 py-3.5 rounded-full" style={{ border: '1.5px solid #E5E5E5', backgroundColor: '#FFFFFF', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
+                  <MdLocationOn className="text-xl flex-shrink-0" style={{ color: '#111111' }} />
+                  <input
+                    type="text"
+                    placeholder="Drop......"
+                    value={dropLocation}
+                    onChange={(e) => setDropLocation(e.target.value)}
+                    className="flex-1 outline-none text-[15px] bg-transparent"
+                    style={{ color: '#111111' }}
+                  />
+                </div>
+
+                {/* Select from the map button */}
+                <button
+                  className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium"
+                  style={{ backgroundColor: '#BDBDBD', color: '#FFFFFF' }}
+                >
+                  <BsGeoAlt className="text-sm" />
+                  <span>Select from the map</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Description Text (below map and search) */}
-        <div className="mt-12 px-2">
-          <p className="text-center text-xs leading-relaxed" style={{ color: '#9E9E9E' }}>
-            Deepenk find's Best routs and prices from<br />
-            trusted ride partners
-          </p>
-        </div>
+        {/* Note at bottom - only show when search is not focused */}
+        {!isSearchFocused && (
+          <div className="mt-6 px-2">
+            <p className="text-center text-[10px] leading-relaxed" style={{ color: '#9E9E9E' }}>
+              Note: This is a trial version, so results may be limited, optimized and not real data and Your feedback will help us improve the final product with better features.
+            </p>
+            <div className="text-center mt-2">
+              <button className="text-xs underline" style={{ color: '#9E9E9E' }}>feedback</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
