@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
 import { FcGoogle } from 'react-icons/fc'
 import { FaApple, FaMicrosoft } from 'react-icons/fa'
@@ -7,23 +8,28 @@ import { BsTelephone } from 'react-icons/bs'
 const LoginModal = () => {
   const { isLoginModalOpen, closeLoginModal } = useAuthStore()
   const [email, setEmail] = useState('')
+  const navigate = useNavigate()
 
   if (!isLoginModalOpen) return null
 
   const handleSocialLogin = (provider) => {
     console.log(`Login with ${provider}`)
     // TODO: Implement actual authentication
+    closeLoginModal()
+    navigate('/profile')
   }
 
   const handleEmailSubmit = (e) => {
     e.preventDefault()
     console.log('Email login:', email)
     // TODO: Implement email authentication
+    closeLoginModal()
+    navigate('/profile')
   }
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-transparent flex items-center justify-center z-50 p-4"
       onClick={closeLoginModal}
     >
       <div
