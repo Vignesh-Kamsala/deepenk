@@ -10,7 +10,7 @@ const TravelsPage = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center px-4 pt-20">
+    <div className="min-h-screen bg-white flex flex-col justify-between items-center px-4 pt-20 pb-4">
       {/* Transport Type Buttons */}
       <div className="flex items-center justify-center gap-4 mb-8 mt-8">
         {transportTypes.map((transport) => (
@@ -130,8 +130,8 @@ const TravelsPage = () => {
         <span className="text-lg font-semibold text-white">Search</span>
       </button>
 
-      {/* Description Text */}
-      <div className="text-center max-w-sm mb-6">
+      {/* Description Text (Note at bottom) */}
+      <div className="text-center max-w-sm">
         <p
           className="text-sm leading-relaxed"
           style={{ color: '#757575' }}
@@ -141,17 +141,6 @@ const TravelsPage = () => {
           trains, and flights instantly to get the best<br />
           price and timing.
         </p>
-      </div>
-
-      {/* Deepenk Logo */}
-      <div className="mt-4">
-        <svg
-          className="w-12 h-12"
-          viewBox="0 0 24 24"
-          fill="#111111"
-        >
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-        </svg>
       </div>
     </div>
   )

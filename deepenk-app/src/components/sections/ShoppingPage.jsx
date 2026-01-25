@@ -49,6 +49,7 @@ const ShoppingPage = () => {
     }
   ]
 
+  const [searchQuery, setSearchQuery] = useState('')
   const [cardQuery, setCardQuery] = useState('')
   const [showSearchModal, setShowSearchModal] = useState(false)
   const headerRef = useRef(null)
@@ -76,17 +77,15 @@ const ShoppingPage = () => {
             <span className="text-2xl" style={{ color: '#757575' }}>+</span>
           </button>
           <div
-            role="button"
-            tabIndex={0}
-            onClick={() => setShowSearchModal(true)}
             className="flex-1 flex items-center gap-4 px-6 py-4 rounded-full border border-gray-200 bg-white"
-            style={{ boxShadow: '0 12px 30px rgba(0,0,0,0.06)' }}
+            style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.06)', backgroundColor: '#F5F5F5' }}
           >
             <input
               type="text"
-              readOnly
-              placeholder="Type brifely what you want"
-              className="flex-1 outline-none text-[15px] bg-transparent cursor-pointer"
+              placeholder="Ask Deepenk"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 outline-none text-[15px] bg-transparent"
               style={{ color: '#111111' }}
             />
             <button className="flex-shrink-0">
@@ -101,6 +100,41 @@ const ShoppingPage = () => {
             </button>
           </div>
         </div>
+
+        {/* Text between inputs */}
+        {searchQuery && (
+          <div className="w-full mb-2 px-2">
+            <p className="text-xs font-semibold text-center" style={{ color: '#070d20' }}>
+              Deep insights for better understanding and more efficient results.
+            </p>
+          </div>
+        )}
+
+        {/* Second input - shown when user starts typing */}
+        {searchQuery && (
+          <div className="w-full mb-3 px-2">
+            <div className="w-full bg-white rounded-xl border border-black px-3 py-3 flex items-center" style={{borderRadius: 16, boxShadow: '0 4px 16px rgba(0,0,0,0.06)'}}>
+              <input
+                aria-label="Quick query"
+                value={cardQuery}
+                onChange={(e) => setCardQuery(e.target.value)}
+                className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500 min-w-0"
+                placeholder={searchQuery ? `what type of ${searchQuery} you need` : "which type of laptop you need ?"}
+                style={{color: '#111', paddingLeft: 6, paddingTop: '4px', paddingBottom: '4px'}}
+              />
+              <button
+                onClick={() => console.log('Query submitted:', cardQuery)}
+                className="ml-3 flex items-center gap-2 bg-white border border-black px-3 py-1.5 rounded-full text-sm font-medium hover:bg-gray-50"
+              >
+                <span>Next</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 8.25L18 12m0 0l-4.5 3.75M18 12H6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Category Icons */}
         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((category) => (
@@ -121,53 +155,6 @@ const ShoppingPage = () => {
               <span className="text-[9px]" style={{ color: '#757575' }}>{category.label}</span>
             </button>
           ))}
-        </div>
-
-        {/* Quick Actions: show four primary categories in a fixed grid */}
-        <div className="mt-3 px-1">
-          <div className="grid grid-cols-4 gap-3">
-            {categories.slice(0, 4).map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setSelectedCategory(c.id)}
-                className="flex flex-col items-center gap-2"
-              >
-                <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center"
-                  style={{
-                    backgroundColor: selectedCategory === c.id ? '#FFF9E6' : '#F5F5F5',
-                    border: selectedCategory === c.id ? '2px solid #FFD700' : '1px solid #E5E5E5'
-                  }}
-                >
-                  <span className="text-xl">{c.emoji}</span>
-                </div>
-                <span className="text-xs text-center" style={{ color: '#757575' }}>{c.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Small query card inside fixed header so it's non-moving */}
-        <div className="w-full mt-2 px-2">
-          <div className="w-full bg-white rounded-xl border-2 border-black px-3 py-2 flex items-center" style={{borderRadius: 18}}>
-            <input
-              aria-label="Quick query"
-              value={cardQuery}
-              onChange={(e) => setCardQuery(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500 min-w-0"
-              placeholder="which type of loptop you need ?"
-              style={{color: '#111', paddingLeft: 6}}
-            />
-            <button
-              onClick={() => console.log('Query submitted:', cardQuery)}
-              className="ml-3 flex items-center gap-2 bg-white border border-black px-3 py-1 rounded-full text-sm font-medium hover:bg-gray-50"
-            >
-              <span>Next</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 8.25L18 12m0 0l-4.5 3.75M18 12H6" />
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
       {/* Main Content - with top padding for fixed header (calculated) */}

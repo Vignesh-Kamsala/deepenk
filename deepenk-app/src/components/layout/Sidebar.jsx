@@ -79,13 +79,17 @@ const Sidebar = ({ isOpen, onClose }) => {
 
         {/* Bottom Section */}
         <div className="p-4 space-y-2" style={{ borderTop: '1px solid #E5E5E5' }}>
-          <button className="flex items-center gap-3 px-4 py-3 rounded-full hover:bg-gray-50 transition-colors w-full">
+          <NavLink
+            to="/profile"
+            onClick={onClose}
+            className="flex items-center gap-3 px-4 py-3 rounded-full hover:bg-gray-50 transition-colors w-full"
+          >
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
               <img src={userIcon} alt="Profile" className="w-4 h-4 object-contain" />
             </div>
             <span className="font-medium text-sm" style={{ color: '#111111' }}>Profile</span>
             <BsSun className="ml-auto text-lg" style={{ color: '#111111' }} />
-          </button>
+          </NavLink>
         </div>
       </aside>
     </>

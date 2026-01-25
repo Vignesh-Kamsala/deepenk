@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { BsSearch, BsGeoAlt } from 'react-icons/bs'
 import { MdLocationOn } from 'react-icons/md'
+import MapPreview from '../common/MapPreview'
 
 const RidesPage = () => {
   const [selectedTransport, setSelectedTransport] = useState(null)
@@ -51,43 +52,7 @@ const RidesPage = () => {
 
         {/* Map Section */}
         <div className="w-full rounded-3xl overflow-hidden mb-6 relative" style={{ height: 420, backgroundColor: '#F6F7F8' }}>
-          {/* subtle map-like background (placeholder) */}
-          <div className="absolute inset-0 opacity-90" style={{ backgroundImage: 'linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01))' }} />
-
-          {/* route path */}
-          <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
-            <path d="M 50 320 Q 110 260, 170 240 T 260 200 T 320 170 T 360 120" fill="none" stroke="#1976D2" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-
-          {/* start marker */}
-          <div style={{ position: 'absolute', left: 36, bottom: 58, zIndex: 3 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 18, background: '#4CAF50', border: '3px solid white', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }} />
-            <div style={{ marginTop: 8, fontSize: 13, background: 'white', padding: '6px 8px', borderRadius: 8, boxShadow: '0 4px 10px rgba(0,0,0,0.08)', fontWeight: 600 }}>MG Road</div>
-          </div>
-
-          {/* end marker */}
-          <div style={{ position: 'absolute', right: 36, top: 38, zIndex: 3, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ fontSize: 20 }}>🏁</div>
-            <div style={{ width: 36, height: 36, borderRadius: 18, background: '#4CAF50', border: '3px solid white', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }} />
-          </div>
-
-          {/* small vehicle icons along route */}
-          <div style={{ position: 'absolute', left: 120, bottom: 160, zIndex: 3 }}>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <div style={{ fontSize: 26 }}>🛺</div>
-              <div style={{ fontSize: 26 }}>🚚</div>
-            </div>
-          </div>
-
-          {/* provider badges */}
-          <div style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 4, display: 'flex', gap: 8 }}>
-            <div style={{ background: '#FFD700', color: '#111', padding: '6px 10px', borderRadius: 999, fontWeight: 700, fontSize: 12 }}>Rapido</div>
-            <div style={{ background: '#111', color: '#fff', padding: '6px 10px', borderRadius: 999, fontWeight: 700, fontSize: 12 }}>Uber</div>
-            <div style={{ background: '#fff', color: '#111', padding: '6px 10px', borderRadius: 999, fontWeight: 700, fontSize: 12, border: '1.5px solid #E5E5E5', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 18, height: 18, background: '#FFD700', borderRadius: 999 }} />
-              <div>OLA</div>
-            </div>
-          </div>
+          <MapPreview />
         </div>
 
         {/* Search Section - Outside of map */}
@@ -159,17 +124,13 @@ const RidesPage = () => {
           </div>
         </div>
 
-        {/* Note at bottom - only show when search is not focused */}
-        {!isSearchFocused && (
-          <div className="mt-6 px-2">
-            <p className="text-center text-[10px] leading-relaxed" style={{ color: '#9E9E9E' }}>
-              Note: This is a trial version, so results may be limited, optimized and not real data and Your feedback will help us improve the final product with better features.
-            </p>
-            <div className="text-center mt-2">
-              <button className="text-xs underline" style={{ color: '#9E9E9E' }}>feedback</button>
-            </div>
-          </div>
-        )}
+        {/* Note at bottom - always visible */}
+        <div className="mt-6 px-2">
+          <p className="text-center text-[10px] leading-relaxed" style={{ color: '#9E9E9E' }}>
+            Note: This is a trial version, so results may be limited, optimized and not real data and Your feedback will help us improve the final product with better features.
+          </p>
+          
+        </div>
       </div>
     </div>
   )
