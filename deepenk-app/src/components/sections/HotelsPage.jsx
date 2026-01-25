@@ -74,10 +74,10 @@ const HotelsPage = () => {
     ],
     description: 'This hotel offers the best overall value for your stay right now.',
     features: [
-      'Excellent guest ratings',
+      'Excellent guest reviews',
       'Prime beachfront location',
       'Modern amenities & comfort',
-      'AI-discounts & deals applied by Deepenk'
+      'All discounts & deals applied by Deepenk'
     ]
   }
 
@@ -195,11 +195,16 @@ const HotelsPage = () => {
             </h3>
 
             {/* Rating */}
-            <div className="flex items-center gap-1 mb-3">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span key={star} className="text-orange-500 text-sm">⭐</span>
-              ))}
-              <span className="text-sm font-semibold ml-1" style={{ color: '#111111' }}>4.8</span>
+            <div className="flex items-center gap-2 mb-3">
+              <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <svg key={star} width="14" height="14" viewBox="0 0 24 24" fill="#FF6F00" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 .587l3.668 7.431 8.2 1.193-5.934 5.79 1.402 8.175L12 18.896l-7.336 3.88 1.402-8.175L.132 9.211l8.2-1.193z" />
+                  </svg>
+                ))}
+              </div>
+              <span className="text-sm font-semibold" style={{ color: '#111111' }}>{featuredHotel.rating}</span>
+              <span className="text-xs" style={{ color: '#757575' }}>({featuredHotel.reviews} reviews)</span>
             </div>
 
             {/* Price */}
