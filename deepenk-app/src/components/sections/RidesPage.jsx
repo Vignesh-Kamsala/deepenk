@@ -9,85 +9,83 @@ const RidesPage = () => {
   const [dropLocation, setDropLocation] = useState('')
 
   const transportTypes = [
-    { id: 1, emoji: '🏍️', label: 'Bike' },
-    { id: 2, emoji: '🏢', label: 'Auto' },
-    { id: 3, emoji: '🚗', label: 'Car' }
+    { id: 1, emoji: '🏍️', label: 'Bike', color: '#FF7043' },
+    { id: 2, emoji: '🛺', label: 'Auto', color: '#66BB6A' },
+    { id: 3, emoji: '🚗', label: 'Car', color: '#FFD54F' }
   ]
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="px-4 pt-20 pb-4">
-        {/* Transport Type Buttons */}
-        <div className="flex items-center justify-center gap-3 mb-4">
-          {transportTypes.map((transport) => (
+      <div className="px-4 pt-16 pb-6">
+        {/* Transport Type Buttons - Figma-style pills */}
+        <div className="flex items-center justify-center gap-4 mb-4" style={{ padding: '8px 12px' }}>
+          {transportTypes.map((t) => (
             <button
-              key={transport.id}
-              onClick={() => setSelectedTransport(transport.id)}
-              className="w-14 h-14 rounded-full flex items-center justify-center transition-all active:scale-95 bg-white"
+              key={t.id}
+              onClick={() => setSelectedTransport(t.id)}
+              aria-pressed={selectedTransport === t.id}
+              aria-label={t.label}
+              className="flex items-center justify-center"
               style={{
-                border: '2.5px solid #111111',
-                backgroundColor: selectedTransport === transport.id ? '#FFF9E6' : '#FFFFFF',
-                boxShadow: '0 6px 18px rgba(0,0,0,0.08)'
+                width: 68,
+                height: 44,
+                borderRadius: 999,
+                background: '#FFFFFF',
+                border: '2.5px solid #111',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: selectedTransport === t.id ? '0 10px 24px rgba(0,0,0,0.14)' : '0 6px 18px rgba(0,0,0,0.06)'
               }}
             >
-              <span className="text-2xl">{transport.emoji}</span>
+              <div style={{ width: 44, height: 36, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent' }}>
+                <div style={{ width: 32, height: 32, borderRadius: 999, background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', border: selectedTransport === t.id ? '2px solid #1976D2' : 'none' }}>
+                  <div style={{ width: 24, height: 24, borderRadius: 999, background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: 16 }}>{t.emoji}</span>
+                  </div>
+                </div>
+              </div>
             </button>
           ))}
         </div>
 
         {/* Map Section */}
-        <div className="w-full rounded-3xl overflow-hidden mb-4 relative" style={{ height: '420px', backgroundColor: '#F8F8F8' }}>
-          {/* Map Background */}
-          <div className="absolute inset-0">
-            <svg className="w-full h-full" style={{ opacity: 0.15 }}>
-              <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#CCCCCC" strokeWidth="1" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-            <div className="absolute rounded-lg" style={{ width: '60px', height: '50px', backgroundColor: '#E8F5E9', top: '20%', left: '5%', opacity: 0.6 }} />
-            <div className="absolute rounded-lg" style={{ width: '45px', height: '45px', backgroundColor: '#E8F5E9', bottom: '25%', right: '8%', opacity: 0.6 }} />
-          </div>
+        <div className="w-full rounded-3xl overflow-hidden mb-6 relative" style={{ height: 420, backgroundColor: '#F6F7F8' }}>
+          {/* subtle map-like background (placeholder) */}
+          <div className="absolute inset-0 opacity-90" style={{ backgroundImage: 'linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01))' }} />
 
-          {/* Route and Markers */}
+          {/* route path */}
           <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
-            <path d="M 50 380 Q 80 320, 100 280 T 140 220 T 180 180 T 240 140 T 300 100 T 360 70" fill="none" stroke="#2196F3" strokeWidth="6" strokeLinecap="round" />
+            <path d="M 50 320 Q 110 260, 170 240 T 260 200 T 320 170 T 360 120" fill="none" stroke="#1976D2" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
 
-          <div className="absolute flex items-center gap-2" style={{ bottom: '50px', left: '30px', zIndex: 2 }}>
-            <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#4CAF50', border: '3px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
-              <div className="w-3 h-3 rounded-full bg-white"></div>
-            </div>
-            <div className="px-2.5 py-1 rounded" style={{ backgroundColor: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.15)', fontSize: '13px', fontWeight: '500', color: '#111111' }}>
-              MG Road
+          {/* start marker */}
+          <div style={{ position: 'absolute', left: 36, bottom: 58, zIndex: 3 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 18, background: '#4CAF50', border: '3px solid white', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }} />
+            <div style={{ marginTop: 8, fontSize: 13, background: 'white', padding: '6px 8px', borderRadius: 8, boxShadow: '0 4px 10px rgba(0,0,0,0.08)', fontWeight: 600 }}>MG Road</div>
+          </div>
+
+          {/* end marker */}
+          <div style={{ position: 'absolute', right: 36, top: 38, zIndex: 3, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ fontSize: 20 }}>🏁</div>
+            <div style={{ width: 36, height: 36, borderRadius: 18, background: '#4CAF50', border: '3px solid white', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }} />
+          </div>
+
+          {/* small vehicle icons along route */}
+          <div style={{ position: 'absolute', left: 120, bottom: 160, zIndex: 3 }}>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ fontSize: 26 }}>🛺</div>
+              <div style={{ fontSize: 26 }}>🚚</div>
             </div>
           </div>
 
-          <div className="absolute flex items-center gap-2" style={{ top: '40px', right: '30px', zIndex: 2 }}>
-            <div className="px-2.5 py-1 rounded" style={{ backgroundColor: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.15)', fontSize: '13px', fontWeight: '500', color: '#111111' }}>
-              Indiranagar
-            </div>
-            <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#4CAF50', border: '3px solid white', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
-              <div className="w-3 h-3 rounded-full bg-white"></div>
-            </div>
-            <div className="text-2xl" style={{ marginLeft: '-8px' }}>🏁</div>
-          </div>
-
-          <div className="absolute" style={{ bottom: '180px', left: '80px', zIndex: 2 }}>
-            <div className="flex gap-2">
-              <div className="text-3xl">🛺</div>
-              <div className="text-3xl">🚚</div>
-            </div>
-          </div>
-
-          <div className="absolute flex gap-2" style={{ bottom: '20px', left: '20px', zIndex: 3 }}>
-            <div className="px-3 py-1.5 rounded-full font-bold text-xs" style={{ backgroundColor: '#FFD700', color: '#111111' }}>Rapido</div>
-            <div className="px-3 py-1.5 rounded-full font-bold text-xs" style={{ backgroundColor: '#000000', color: '#FFFFFF' }}>Uber</div>
-            <div className="px-3 py-1.5 rounded-full font-bold text-xs flex items-center gap-1" style={{ backgroundColor: '#FFFFFF', color: '#111111', border: '1.5px solid #E5E5E5' }}>
-              <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FFD700' }}><span style={{ fontSize: '8px' }}>⭕</span></div>
-              <span>OLA</span>
+          {/* provider badges */}
+          <div style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 4, display: 'flex', gap: 8 }}>
+            <div style={{ background: '#FFD700', color: '#111', padding: '6px 10px', borderRadius: 999, fontWeight: 700, fontSize: 12 }}>Rapido</div>
+            <div style={{ background: '#111', color: '#fff', padding: '6px 10px', borderRadius: 999, fontWeight: 700, fontSize: 12 }}>Uber</div>
+            <div style={{ background: '#fff', color: '#111', padding: '6px 10px', borderRadius: 999, fontWeight: 700, fontSize: 12, border: '1.5px solid #E5E5E5', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 18, height: 18, background: '#FFD700', borderRadius: 999 }} />
+              <div>OLA</div>
             </div>
           </div>
         </div>
@@ -178,3 +176,4 @@ const RidesPage = () => {
 }
 
 export default RidesPage
+
