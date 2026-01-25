@@ -1,6 +1,56 @@
 import React, { useState } from 'react'
 import { BsMicFill } from 'react-icons/bs'
 
+const COLORS = {
+  primary: '#FF6F00',
+  accent: '#10B981',
+  text: '#111111',
+  muted: '#757575',
+  inputBg: '#F5F5F5',
+  border: '#E5E5E5'
+}
+
+function StyledButton({ children, variant = 'default', style, ...rest }) {
+  const base = {
+    borderRadius: 999,
+    padding: '10px 14px',
+    fontSize: 14,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer'
+  }
+
+  const variants = {
+    default: { background: '#E5E5E5', color: COLORS.text, border: `1px solid ${COLORS.border}` },
+    primary: { background: COLORS.primary, color: '#fff', fontWeight: 600 },
+    ghost: { background: 'transparent', color: COLORS.primary, border: `1px solid ${COLORS.primary}` },
+    circle: { background: '#fff', border: `1.5px solid ${COLORS.border}`, width: 48, height: 48, padding: 0 }
+  }
+
+  const applied = Object.assign({}, base, variants[variant] || variants.default, style)
+  return (
+    <button style={applied} {...rest}>{children}</button>
+  )
+}
+
+function SearchBar({ onSend }) {
+  return (
+    <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+      <StyledButton variant="circle" aria-label="plus">+</StyledButton>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, background: COLORS.inputBg, padding: '12px 16px', borderRadius: 999, border: `1px solid ${COLORS.border}` }}>
+        <input placeholder="Ask Deepenk" style={{ flex: 1, border: 'none', outline: 'none', fontSize: 15, color: COLORS.text, background: 'transparent' }} />
+        <button aria-label="mic" style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}><BsMicFill style={{ color: COLORS.text, fontSize: 18 }} /></button>
+        <button aria-label="send" onClick={onSend} style={{ width: 36, height: 36, borderRadius: 999, background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}>
+          <svg className="w-4 h-4" fill="none" stroke="#FFFFFF" viewBox="0 0 24 24" strokeWidth={2.5} width="16" height="16">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
 const HotelsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
 
@@ -56,54 +106,22 @@ const HotelsPage = () => {
     <div className="min-h-screen bg-white pb-8">
       {/* Search Bar - Fixed at top */}
       <div className="fixed top-16 left-0 right-0 bg-white z-30 px-4 pt-4 pb-3">
-        {/* Plus Button + Search Input */}
-        <div className="flex items-center gap-3 mb-4">
-          <button
-            className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
-            style={{ backgroundColor: '#FFFFFF', border: '1.5px solid #E5E5E5' }}
-          >
-            <span className="text-[24px]" style={{ color: '#757575' }}>+</span>
-          </button>
-
-          <div
-            className="flex-1 flex items-center gap-3 px-4 py-3 rounded-full"
-            style={{
-              backgroundColor: '#F5F5F5',
-              border: '1px solid #E5E5E5'
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Ask Deepenk"
-              className="flex-1 outline-none text-[15px] bg-transparent"
-              style={{ color: '#111111' }}
-            />
-            <button className="flex-shrink-0">
-              <BsMicFill className="text-[18px]" style={{ color: '#111111' }} />
-            </button>
-            <button
-              className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: '#000000' }}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="#FFFFFF" viewBox="0 0 24 24" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
-          </div>
+        <div className="mb-4">
+          <SearchBar onSend={() => {}} />
         </div>
 
         {/* Header Text */}
         <div className="mb-3">
-          <h2 className="text-base font-bold mb-1" style={{ color: '#111111' }}>
+          <h2 className="text-base font-bold mb-1" style={{ color: COLORS.text }}>
             Book Your Stay with Confidence
           </h2>
-          <p className="text-xs leading-relaxed" style={{ color: '#757575' }}>
+          <p className="text-xs leading-relaxed" style={{ color: COLORS.muted }}>
             Deepenk helps you find the best hotel by comparing price, comfort, reviews, and availability.
           </p>
         </div>
 
         {/* Category Icons */}
-        <div className="flex gap-3 mb-3 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-3 mb-3 overflow-x-auto pb-2" style={{ WebkitOverflowScrolling: 'touch' }}>
           {categories.map((category) => (
             <button
               key={category.id}
@@ -113,46 +131,26 @@ const HotelsPage = () => {
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center"
                 style={{
-                  backgroundColor: selectedCategory === category.id ? '#FFF9E6' : '#F5F5F5',
-                  border: selectedCategory === category.id ? '2px solid #FFD700' : '1px solid #E5E5E5'
+                  backgroundColor: selectedCategory === category.id ? '#FFF9E6' : COLORS.inputBg,
+                  border: selectedCategory === category.id ? '2px solid #FFD700' : `1px solid ${COLORS.border}`
                 }}
               >
                 <span className="text-2xl">{category.emoji}</span>
               </div>
-              <span className="text-[10px]" style={{ color: '#757575' }}>{category.label}</span>
+              <span className="text-[10px]" style={{ color: COLORS.muted }}>{category.label}</span>
             </button>
           ))}
         </div>
 
         {/* Filter Buttons */}
         <div className="flex gap-2 mb-3">
-          <button
-            className="px-4 py-2 rounded-full transition-all active:scale-95"
-            style={{ backgroundColor: '#E5E5E5', color: '#111111' }}
-          >
-            <span className="text-xs font-medium">Enter Destination</span>
-          </button>
-          <button
-            className="px-4 py-2 rounded-full transition-all active:scale-95"
-            style={{ backgroundColor: '#E5E5E5', color: '#111111' }}
-          >
-            <span className="text-xs font-medium">Check-in: May 12</span>
-          </button>
+          <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Enter Destination</StyledButton>
+          <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Check-in: May 12</StyledButton>
         </div>
 
         <div className="flex gap-2 mb-3">
-          <button
-            className="px-4 py-2 rounded-full transition-all active:scale-95"
-            style={{ backgroundColor: '#E5E5E5', color: '#111111' }}
-          >
-            <span className="text-xs font-medium">Check-out: May 15</span>
-          </button>
-          <button
-            className="px-4 py-2 rounded-full transition-all active:scale-95"
-            style={{ backgroundColor: '#FF6F00', color: '#FFFFFF' }}
-          >
-            <span className="text-xs font-semibold">Find Hotels →</span>
-          </button>
+          <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Check-out: May 15</StyledButton>
+          <StyledButton variant="primary" style={{ padding: '8px 16px', fontSize: 13 }}>Find Hotels →</StyledButton>
         </div>
       </div>
 
@@ -228,12 +226,9 @@ const HotelsPage = () => {
             </p>
 
             {/* Book Button */}
-            <button
-              className="w-full py-3 rounded-full transition-all active:scale-98 mb-4"
-              style={{ backgroundColor: '#FF6F00' }}
-            >
-              <span className="text-sm font-semibold text-white">Book This Stay</span>
-            </button>
+            <div className="mb-4">
+              <StyledButton variant="primary" style={{ width: '100%', padding: '12px 0', fontSize: 15 }}>Book This Stay</StyledButton>
+            </div>
 
             {/* Why This Hotel */}
             <div>
@@ -304,22 +299,8 @@ const HotelsPage = () => {
                   </div>
 
                   <div className="flex items-center gap-2 mt-2">
-                    <button
-                      className="px-3 py-1.5 rounded-full transition-all active:scale-95"
-                      style={{
-                        backgroundColor: 'transparent',
-                        border: '1px solid #2196F3',
-                        color: '#2196F3'
-                      }}
-                    >
-                      <span className="text-xs font-medium">View Details</span>
-                    </button>
-                    <button
-                      className="flex-1 px-3 py-1.5 rounded-full transition-all active:scale-95"
-                      style={{ backgroundColor: '#FF6F00' }}
-                    >
-                      <span className="text-xs font-semibold text-white">Book This OYO</span>
-                    </button>
+                    <StyledButton variant="ghost" style={{ padding: '8px 12px', fontSize: 13, border: '1px solid #2196F3', color: '#2196F3' }}>View Details</StyledButton>
+                    <StyledButton variant="primary" style={{ flex: 1, padding: '8px 12px', fontSize: 13 }}>Book This OYO</StyledButton>
                   </div>
                 </div>
               </div>
