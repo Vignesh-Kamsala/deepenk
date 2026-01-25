@@ -121,36 +121,42 @@ const HotelsPage = () => {
         </div>
 
         {/* Category Icons */}
-        <div className="flex gap-3 mb-3 overflow-x-auto pb-2" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div className="flex gap-4 mb-3 overflow-x-auto pb-2" style={{ WebkitOverflowScrolling: 'touch' }}>
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className="flex-shrink-0 flex flex-col items-center gap-1 transition-all active:scale-95"
+              className="flex-shrink-0 flex flex-col items-center gap-2 transition-all active:scale-95"
+              style={{ width: 64 }}
             >
               <div
-                className="w-14 h-14 rounded-full flex items-center justify-center"
+                className="w-14 h-14 rounded-2xl flex items-center justify-center"
                 style={{
-                  backgroundColor: selectedCategory === category.id ? '#FFF9E6' : COLORS.inputBg,
-                  border: selectedCategory === category.id ? '2px solid #FFD700' : `1px solid ${COLORS.border}`
+                  backgroundColor: selectedCategory === category.id ? '#FFFFFF' : '#FFFFFF',
+                  border: selectedCategory === category.id ? '2px solid #10B981' : `1px solid ${COLORS.border}`,
+                  boxShadow: '0 1px 6px rgba(0,0,0,0.06)'
                 }}
               >
                 <span className="text-2xl">{category.emoji}</span>
               </div>
-              <span className="text-[10px]" style={{ color: COLORS.muted }}>{category.label}</span>
+              <span className="text-[11px] text-center" style={{ color: COLORS.muted }}>{category.label}</span>
             </button>
           ))}
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex gap-2 mb-3">
-          <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Enter Destination</StyledButton>
-          <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Check-in: May 12</StyledButton>
-        </div>
+        {/* Filter Buttons - arranged to match screenshot */}
+        <div className="mb-3">
+          <div className="flex items-center gap-2 mb-2">
+            <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Enter Destination</StyledButton>
+            <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Check-in: May 12</StyledButton>
+          </div>
 
-        <div className="flex gap-2 mb-3">
-          <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Check-out: May 15</StyledButton>
-          <StyledButton variant="primary" style={{ padding: '8px 16px', fontSize: 13 }}>Find Hotels →</StyledButton>
+          <div className="flex items-center justify-between gap-2">
+            <StyledButton style={{ padding: '8px 14px', fontSize: 13 }}>Check-out: May 15</StyledButton>
+            <div style={{ marginLeft: 'auto' }}>
+              <StyledButton variant="primary" style={{ padding: '8px 18px', fontSize: 13 }}>Find Hotels →</StyledButton>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -44,10 +44,11 @@ const MapPreview = () => {
       </div>
 
       {/* transport type buttons */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-3">
-        <div className="w-14 h-10 bg-white rounded-full flex items-center justify-center shadow">🚲</div>
-        <div className="w-14 h-10 bg-white rounded-full flex items-center justify-center shadow">🛺</div>
-        <div className="w-14 h-10 bg-white rounded-full flex items-center justify-center shadow">🚗</div>
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center justify-center gap-3">
+        <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow flex-shrink-0">🚲</div>
+        <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow flex-shrink-0">🛺</div>
+        <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow flex-shrink-0">🚗</div>
+        <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow flex-shrink-0">🚕</div>
       </div>
     </div>
   )

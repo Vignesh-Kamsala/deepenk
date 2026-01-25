@@ -123,6 +123,30 @@ const ShoppingPage = () => {
           ))}
         </div>
 
+        {/* Quick Actions: show four primary categories in a fixed grid */}
+        <div className="mt-3 px-1">
+          <div className="grid grid-cols-4 gap-3">
+            {categories.slice(0, 4).map((c) => (
+              <button
+                key={c.id}
+                onClick={() => setSelectedCategory(c.id)}
+                className="flex flex-col items-center gap-2"
+              >
+                <div
+                  className="w-14 h-14 rounded-full flex items-center justify-center"
+                  style={{
+                    backgroundColor: selectedCategory === c.id ? '#FFF9E6' : '#F5F5F5',
+                    border: selectedCategory === c.id ? '2px solid #FFD700' : '1px solid #E5E5E5'
+                  }}
+                >
+                  <span className="text-xl">{c.emoji}</span>
+                </div>
+                <span className="text-xs text-center" style={{ color: '#757575' }}>{c.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Small query card inside fixed header so it's non-moving */}
         <div className="w-full mt-2 px-2">
           <div className="w-full bg-white rounded-xl border-2 border-black px-3 py-2 flex items-center" style={{borderRadius: 18}}>
