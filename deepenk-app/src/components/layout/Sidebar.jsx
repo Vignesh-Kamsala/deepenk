@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               to={path}
               onClick={onClose}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive ? 'bg-gray-100' : 'hover:bg-gray-50'
+                `flex items-center gap-3 px-4 py-3 rounded-full transition-colors ${isActive ? 'bg-gray-100' : 'hover:bg-gray-50'
                 }`
               }
             >

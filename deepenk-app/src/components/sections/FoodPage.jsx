@@ -3,6 +3,8 @@ import { BsMicFill } from 'react-icons/bs'
 
 const FoodPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
+  const [showSecondInput, setShowSecondInput] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const categories = [
     { id: 1, emoji: '🥗', label: 'Salad' },
@@ -80,12 +82,14 @@ const FoodPage = () => {
             style={{
               backgroundColor: '#F5F5F5',
               border: '1px solid #E5E5E5',
-              boxShadow: '0 12px 30px rgba(0,0,0,0.06)'
+              boxShadow: '0 4px 16px rgba(0,0,0,0.06)'
             }}
           >
             <input
               type="text"
               placeholder="Ask Deepenk"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 outline-none text-[15px] bg-transparent"
               style={{ color: '#111111' }}
             />
@@ -102,6 +106,40 @@ const FoodPage = () => {
             </button>
           </div>
         </div>
+
+        {/* Text between inputs */}
+        {searchQuery && (
+          <div className="w-full mb-2 px-2">
+            <p className="text-xs font-semibold text-center" style={{ color: '#070d20' }}>
+              Deep insights for better understanding and more efficient results.
+            </p>
+          </div>
+        )}
+
+        {/* Second input - shown when user starts typing */}
+        {searchQuery && (
+          <div className="w-full mb-3 px-2">
+            <div className="w-full bg-white rounded-xl border border-black px-3 py-3 flex items-center" style={{borderRadius: 16, boxShadow: '0 4px 16px rgba(0,0,0,0.06)'}}>
+              <input
+                aria-label="Quick query"
+                value={cardQuery}
+                onChange={(e) => setCardQuery(e.target.value)}
+                className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500 min-w-0"
+                placeholder={searchQuery ? `what type of ${searchQuery} you need` : "what type of biryani you need"}
+                style={{color: '#111', paddingLeft: 6, paddingTop: '4px', paddingBottom: '4px'}}
+              />
+              <button
+                onClick={() => console.log('Food query:', cardQuery)}
+                className="ml-3 flex items-center gap-2 bg-white border border-black px-3 py-1.5 rounded-full text-sm font-medium hover:bg-gray-50"
+              >
+                <span>Next</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 8.25L18 12m0 0l-4.5 3.75M18 12H6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Category Icons */}
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
@@ -123,29 +161,6 @@ const FoodPage = () => {
               <span className="text-[10px]" style={{ color: '#757575' }}>{category.label}</span>
             </button>
           ))}
-        </div>
-
-        {/* Small query card inside fixed header */}
-        <div className="w-full mt-2 px-2">
-          <div className="w-full bg-white rounded-xl border border-black px-3 py-2 flex items-center" style={{borderRadius: 16}}>
-            <input
-              aria-label="Quick query"
-              value={cardQuery}
-              onChange={(e) => setCardQuery(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500 min-w-0"
-              placeholder="what type of biryani you need"
-              style={{color: '#111', paddingLeft: 6}}
-            />
-            <button
-              onClick={() => console.log('Food query:', cardQuery)}
-              className="ml-3 flex items-center gap-2 bg-white border border-black px-3 py-1 rounded-full text-sm font-medium hover:bg-gray-50"
-            >
-              <span>Next</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 8.25L18 12m0 0l-4.5 3.75M18 12H6" />
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
 

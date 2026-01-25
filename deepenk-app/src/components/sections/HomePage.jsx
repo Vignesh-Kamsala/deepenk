@@ -4,7 +4,8 @@ import { BsMicFill } from 'react-icons/bs';
 
 const HomePage = () => {
   return (
-    <div className="w-full flex flex-col items-center justify-start px-4 pt-6 pb-8 min-h-[calc(100vh-4rem)]">
+    <div className="w-full flex flex-col items-center justify-between px-4 pt-6 pb-4 min-h-[calc(100vh-4rem)]">
+      <div className="w-full flex flex-col items-center">
       {/* Logo */}
       <div className="mb-3 mt-12 flex items-center justify-center">
         <img src={logoImg} alt="Deepenk Logo" className="w-20 h-20 rounded-full object-contain" />
@@ -50,37 +51,39 @@ const HomePage = () => {
         </button>
 
         {/* Prompt Input Box - reduced padding, thin border, more compact */}
-        <div className="flex-1 max-w-md flex items-center gap-3 px-4 py-3 bg-white rounded-3xl border" style={{boxShadow: '0 12px 30px rgba(0,0,0,0.06)', borderColor: '#EFEFEF', minWidth: 0}}>
-          <input
-            type="text"
-            placeholder="Type briefly what you want"
-            className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500 min-w-0"
-            style={{color: '#111111'}}
-          />
-          <button className="text-gray-600 hover:text-gray-800 transition-colors flex items-center justify-center w-8 h-8">
-            <BsMicFill className="text-base" />
-          </button>
-          <button className="bg-black text-white rounded-full p-2.5 hover:opacity-95 transition-colors flex items-center justify-center w-9 h-9">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-4 h-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M14.25 6.75L21.75 12m0 0l-7.5 5.25M21.75 12H3"
-              />
-            </svg>
-          </button>
-        </div>
+          <div className="flex-1 max-w-md flex items-center gap-3 px-4 py-4 bg-white rounded-3xl border transition-shadow duration-200" style={{boxShadow: '0 4px 12px rgba(0,0,0,0.04)', borderColor: '#E5E5E5', minWidth: 0}}>
+            <input
+              type="text"
+              placeholder="Type briefly what you want"
+              className="flex-1 bg-transparent outline-none text-md placeholder:text-gray-500 min-w-0"
+              style={{color: '#111111', paddingTop: '6px', paddingBottom: '6px'}}
+            />
+            <button className="text-gray-600 hover:text-gray-800 transition-colors flex items-center justify-center w-8 h-8" style={{background: 'transparent'}}>
+              <BsMicFill className="text-base" />
+            </button>
+            <button className="bg-black text-white rounded-full p-2.5 hover:opacity-95 transition-all flex items-center justify-center w-9 h-9">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M14.25 6.75L21.75 12m0 0l-7.5 5.25M21.75 12H3"
+                />
+              </svg>
+            </button>
+          </div>
       </div>
+      </div>
+              
       {/* Trial note at bottom */}
-      <div className="w-full mt-6 px-4">
-        <p className="text-[10px] text-gray-500">Note: This is a trial version, so results may be limited, optimized and not real data. Your feedback will help us improve the final product with better features.</p>
+      <div className="w-full px-4 mt-8">
+        <p className="text-[10px] text-gray-500 text-center leading-relaxed">Note: This is a trial version, so results may be limited, optimized and not real data. Your feedback will help us improve the final product with better features.</p>
       </div>
     </div>
   );

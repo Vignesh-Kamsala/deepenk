@@ -31,12 +31,16 @@ const MobileHeader = ({ onMenuToggle, showAuthButtons = false }) => {
         </svg>
       </button>
       {/* Logo and optional Heading */}
-      <img
-        src={logoImg}
-        alt="Deepenk Logo"
-        className={`object-contain ${isHistory ? 'w-6 h-6 ml-2' : 'w-7 h-7 ml-2'}`}
-      />
-      {!isHistory && <span className="font-bold text-lg ml-1">Deepenk</span>}
+      {!isHistory && (
+        <>
+          <img
+            src={logoImg}
+            alt="Deepenk Logo"
+            className="w-7 h-7 ml-2 object-contain"
+          />
+          <span className="font-bold text-lg ml-1">Deepenk</span>
+        </>
+      )}
       {/* Login and Sign In buttons on the right (only on Home) */}
       {showAuthButtons && (
         <div className="ml-auto flex gap-3">

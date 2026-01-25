@@ -7,7 +7,7 @@ const FeedbackButton = ({ formUrl = 'https://forms.gle/your-form-id' }) => {
       target="_blank"
       rel="noreferrer"
       aria-label="Give feedback"
-      className="fixed right-4 bottom-6 z-50 flex items-center gap-2 bg-white border border-gray-200 rounded-full px-3 py-2 shadow-lg hover:shadow-xl transition-shadow"
+      className="fixed right-4 bottom-20 z-50 flex items-center gap-2 bg-white border border-gray-200 rounded-full px-3 py-2 shadow-lg hover:shadow-xl transition-shadow"
       style={{ minWidth: 44 }}
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
