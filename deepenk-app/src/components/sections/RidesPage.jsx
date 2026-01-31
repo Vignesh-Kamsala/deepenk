@@ -17,7 +17,7 @@ const RidesPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="px-4 pt-16 pb-6">
+      <div className="px-4 lg:px-8 pt-16 lg:pt-8 pb-6 max-w-5xl mx-auto">
         {/* Transport Type Buttons - Figma-style pills */}
         <div className="flex items-center justify-center gap-4 mb-4" style={{ padding: '8px 12px' }}>
           {transportTypes.map((t) => (
@@ -51,8 +51,26 @@ const RidesPage = () => {
         </div>
 
         {/* Map Section */}
-        <div className="w-full rounded-3xl overflow-hidden mb-6 relative" style={{ height: 420, backgroundColor: '#F6F7F8' }}>
+        <div className="w-full rounded-3xl overflow-hidden mb-6 relative" style={{ height: 'clamp(320px, 50vh, 500px)', backgroundColor: '#F6F7F8' }}>
           <MapPreview />
+          {/* Ride Provider Logos - Desktop overlay */}
+          <div className="hidden lg:flex absolute inset-0 items-center justify-center pointer-events-none">
+            <div className="absolute top-4 left-4 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
+              <span className="text-sm font-semibold">Rapido</span>
+            </div>
+            <div className="absolute top-4 right-4 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
+              <span className="text-sm font-semibold">Uber</span>
+            </div>
+            <div className="absolute bottom-4 left-4 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
+              <span className="text-sm font-semibold">Auto</span>
+            </div>
+            <div className="absolute bottom-4 right-4 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
+              <span className="text-sm font-semibold">Ola</span>
+            </div>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
+              <span className="text-sm font-semibold">Parcel</span>
+            </div>
+          </div>
         </div>
 
         {/* Search Section - Outside of map */}
@@ -75,10 +93,15 @@ const RidesPage = () => {
             </div>
 
             {/* Description Text */}
-            <div className="mt-4 px-2">
-              <p className="text-center text-xs leading-relaxed" style={{ color: '#9E9E9E' }}>
-                Deepenk find's Best routs and prices from<br />
-                trusted ride partners
+            <div className="mt-4 lg:mt-6 px-2">
+              <p className="text-center font-semibold text-sm lg:text-base mb-1" style={{ color: '#111' }}>
+                🚗 Rides, Made Easy for with Deepenk
+              </p>
+              <p className="text-center text-xs lg:text-sm leading-relaxed" style={{ color: '#9E9E9E' }}>
+                Deepenk helps you choose the best ride across platforms in seconds.<br className="hidden lg:block" />
+                Instead of checking multiple apps, Deepenk compares prices, arrival time,<br className="hidden lg:block" />
+                availability, and automatically applies all available offers and coupons to<br className="hidden lg:block" />
+                recommend the option that truly works best for you.
               </p>
             </div>
 
@@ -129,7 +152,7 @@ const RidesPage = () => {
           <p className="text-center text-[10px] leading-relaxed" style={{ color: '#9E9E9E' }}>
             Note: This is a trial version, so results may be limited, optimized and not real data and Your feedback will help us improve the final product with better features.
           </p>
-          
+
         </div>
       </div>
     </div>

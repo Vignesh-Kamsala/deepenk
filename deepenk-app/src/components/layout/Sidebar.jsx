@@ -24,18 +24,19 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Overlay */}
+      {/* Overlay - only show on mobile when sidebar is open */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-transparent z-40 transition-opacity"
+          className="fixed inset-0 bg-transparent z-40 transition-opacity lg:hidden"
           onClick={onClose}
         />
       )}
 
-      {/* Drawer */}
+      {/* Drawer - permanent on desktop (lg:), drawer on mobile */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-full max-w-xs sm:max-w-sm md:max-w-md bg-white flex flex-col z-50 shadow-xl rounded-r-3xl transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed left-0 top-0 h-screen w-[220px] bg-white flex flex-col z-50 shadow-xl 
+          rounded-r-3xl lg:rounded-none transform transition-transform duration-300 
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
         style={{ borderRight: '1px solid #E5E5E5' }}
       >
         {/* Logo Section */}

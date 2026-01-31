@@ -17,7 +17,8 @@ const Layout = ({ children }) => {
     <div className="flex min-h-screen bg-white">
       <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
       <MobileHeader onMenuToggle={toggleSidebar} showAuthButtons={isHome} />
-      <main className="flex-1 pt-16 overflow-x-hidden">
+      {/* Main content: pt-16 for mobile header, lg:pt-0 and lg:ml-[220px] for desktop sidebar */}
+      <main className="flex-1 pt-16 lg:pt-0 lg:ml-[220px] overflow-x-hidden">
         {children}
       </main>
       <FeedbackButton />

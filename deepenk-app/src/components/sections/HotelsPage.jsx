@@ -1,68 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { BsMicFill } from 'react-icons/bs'
 
-const COLORS = {
-  primary: '#FF6F00',
-  accent: '#10B981',
-  text: '#111111',
-  muted: '#757575',
-  inputBg: '#F5F5F5',
-  border: '#E5E5E5'
-}
-
-function StyledButton({ children, variant = 'default', style, ...rest }) {
-  const base = {
-    borderRadius: 999,
-    padding: '10px 14px',
-    fontSize: 14,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer'
-  }
-
-  const variants = {
-    default: { background: '#E5E5E5', color: COLORS.text, border: `1px solid ${COLORS.border}` },
-    primary: { background: COLORS.primary, color: '#fff', fontWeight: 600 },
-    ghost: { background: 'transparent', color: COLORS.primary, border: `1px solid ${COLORS.primary}` },
-    circle: { background: '#fff', border: `1.5px solid ${COLORS.border}`, width: 48, height: 48, padding: 0 }
-  }
-
-  const applied = Object.assign({}, base, variants[variant] || variants.default, style)
-  return (
-    <button style={applied} {...rest}>{children}</button>
-  )
-}
-
-function SearchBar({ onSend }) {
-  return (
-    <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
-      <StyledButton variant="circle" aria-label="plus" style={{ boxShadow: '0 6px 14px rgba(0,0,0,0.08)' }}>+</StyledButton>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, background: '#F7F7F7', padding: '12px 16px', borderRadius: 999, border: `1px solid #D9D9D9`, boxShadow: '0 6px 18px rgba(0,0,0,0.08)' }}>
-        <input placeholder="Ask Deepenk" style={{ flex: 1, border: 'none', outline: 'none', fontSize: 15, color: COLORS.text, background: 'transparent', paddingTop: 2 }} />
-        <button aria-label="mic" style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}><BsMicFill style={{ color: COLORS.text, fontSize: 18 }} /></button>
-        <button aria-label="send" onClick={onSend} style={{ width: 38, height: 38, borderRadius: 999, background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}>
-          <svg className="w-4 h-4" fill="none" stroke="#FFFFFF" viewBox="0 0 24 24" strokeWidth={2.5} width="16" height="16">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  )
-}
-
 const HERO_IMG = 'https://images.unsplash.com/photo-1501117716987-c8e1ecb210af?auto=format&fit=crop&w=1200&q=80'
 const ALT_IMG = 'https://images.unsplash.com/photo-1509057199576-632a47484ece?auto=format&fit=crop&w=800&q=80'
 
 const HotelsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
   const headerRef = useRef(null)
-  const [contentPadding, setContentPadding] = useState(320)
+  const [contentPadding, setContentPadding] = useState(0)
 
   const categories = [
     { id: 1, emoji: '🏨', label: 'Hotels' },
     { id: 2, emoji: '🏖️', label: 'Resort' },
-    { id: 3, emoji: '🍽️', label: 'restaurants' },
+    { id: 3, emoji: '🍽️', label: 'Restaurants' },
     { id: 4, emoji: '🅿️', label: 'PG' }
   ]
 
@@ -70,15 +21,9 @@ const HotelsPage = () => {
     badge: 'Best Choice',
     name: 'Seaview Grand Hotel',
     rating: '4.8',
-    reviews: '1,234',
     price: '₹499',
     image: HERO_IMG,
-    amenities: [
-      { icon: '📶', text: 'Free Wi-Fi' },
-      { icon: '🍳', text: 'Breakfast Included' },
-      { icon: '✅', text: 'Free Cancellation' }
-    ],
-    description: 'This hotel offers the best overall value for your stay right now.',
+    amenities: ['📶 Free Wi-Fi', '🍳 Breakfast Included', '✅ Free Cancellation'],
     features: [
       'Excellent guest reviews',
       'Prime beachfront location',
@@ -88,34 +33,14 @@ const HotelsPage = () => {
   }
 
   const alternatives = [
-    {
-      id: 1,
-      name: 'City Comfort Inn',
-      priceRange: '₹899-₹1120',
-      category: 'Budget-friendly',
-      image: ALT_IMG
-    },
-    {
-      id: 2,
-      name: 'City Comfort Inn',
-      priceRange: '₹999-₹1120',
-      category: 'Budget-friendly',
-      image: ALT_IMG
-    },
-    {
-      id: 3,
-      name: 'City Comfort Inn',
-      priceRange: '₹1120-₹1210',
-      category: 'Budget-friendly',
-      image: ALT_IMG
-    }
+    { id: 1, name: 'City Comfort Inn', price: '₹899-₹1120', category: 'Budget-friendly', image: ALT_IMG },
+    { id: 2, name: 'Grand Palace Hotel', price: '₹999-₹1500', category: 'Premium', image: ALT_IMG },
+    { id: 3, name: 'Cozy Stay Suites', price: '₹750-₹1000', category: 'Family-friendly', image: ALT_IMG }
   ]
 
   useEffect(() => {
     const calc = () => {
-      if (headerRef.current) {
-        setContentPadding(headerRef.current.offsetHeight + 12)
-      }
+      if (headerRef.current) setContentPadding(headerRef.current.offsetHeight + 16)
     }
     calc()
     window.addEventListener('resize', calc)
@@ -123,216 +48,155 @@ const HotelsPage = () => {
   }, [])
 
   return (
-    <div className="min-h-screen" style={{ background: '#f7f7fb' }}>
-      {/* Search Bar - Fixed at top */}
-      <div ref={headerRef} className="fixed top-14 left-0 right-0 z-30">
-        <div className="max-w-[440px] mx-auto bg-white px-4 pt-4 pb-3 shadow-sm" style={{ borderBottom: '1px solid #ececec' }}>
-          <div className="mb-4">
-            <SearchBar onSend={() => {}} />
+    <div className="min-h-screen bg-gray-50 lg:bg-white pb-8">
+      {/* Header - Fixed */}
+      <div ref={headerRef} className="fixed top-14 lg:top-0 left-0 lg:left-[220px] right-0 bg-white z-40 px-4 lg:px-6 pt-3 lg:pt-5 pb-4 border-b border-gray-200">
+        <div className="max-w-4xl mx-auto">
+          {/* Search Bar */}
+          <div className="flex items-center gap-3 mb-4">
+            <button className="w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center border border-gray-200 bg-white shadow-sm">
+              <span className="text-xl lg:text-2xl text-gray-500">+</span>
+            </button>
+            <div className="flex-1 flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-full bg-gray-100 border border-gray-200">
+              <input
+                type="text"
+                placeholder="Ask Deepenk"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 outline-none text-sm lg:text-base bg-transparent"
+              />
+              <BsMicFill className="text-gray-700" />
+              <button className="w-9 h-9 lg:w-10 lg:h-10 rounded-full bg-black flex items-center justify-center">
+                <svg width="16" height="16" fill="none" stroke="#FFF" viewBox="0 0 24 24" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          {/* Header Text */}
-          <div className="mb-3 text-center">
-            <h2 className="text-base font-bold mb-1" style={{ color: COLORS.text }}>
-              Book Your Stay with Confidence
-            </h2>
-            <p className="text-xs leading-relaxed" style={{ color: COLORS.muted }}>
-              Deepenk helps you find the best hotel by comparing price, comfort, reviews, and availability.
-            </p>
+          {/* Title */}
+          <div className="text-center mb-4">
+            <h2 className="text-lg lg:text-2xl font-bold text-gray-900 mb-1">Book Your Stay with Confidence</h2>
+            <p className="text-xs lg:text-sm text-gray-500">Deepenk helps you find the best hotel by comparing price, comfort, reviews, and availability.</p>
           </div>
 
-          {/* Category Icons */}
-          <div className="flex gap-4 mb-3 overflow-x-auto pb-2 justify-center" style={{ WebkitOverflowScrolling: 'touch' }}>
-            {categories.map((category) => (
+          {/* Categories */}
+          <div className="flex gap-4 lg:gap-6 overflow-x-auto pb-2 scrollbar-hide justify-center">
+            {categories.map((cat) => (
               <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className="flex-shrink-0 flex flex-col items-center gap-2 transition-all active:scale-95"
-                style={{ width: 85 }}
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className="flex-shrink-0 flex flex-col items-center gap-1.5"
               >
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    border: selectedCategory === category.id ? '2px solid #10B981' : `1px solid ${COLORS.border}`,
-                    boxShadow: '0 1px 6px rgba(0,0,0,0.06)'
-                  }}
+                  className={`w-14 h-14 lg:w-16 lg:h-16 rounded-2xl flex items-center justify-center transition-all ${selectedCategory === cat.id
+                      ? 'bg-green-50 border-2 border-green-500'
+                      : 'bg-white border border-gray-200 shadow-sm'
+                    }`}
                 >
-                  <span className="text-2xl">{category.emoji}</span>
+                  <span className="text-2xl lg:text-3xl">{cat.emoji}</span>
                 </div>
-                <span className="text-[11px] text-center" style={{ color: COLORS.muted }}>{category.label}</span>
+                <span className="text-[10px] lg:text-xs text-gray-500">{cat.label}</span>
               </button>
             ))}
           </div>
 
-          {/* Filter Inputs - arranged to match screenshot */}
-          <div className="mb-3">
-            <div className="flex items-center gap-2 mb-2">
-              <input 
-                type="text" 
-                placeholder="Enter Destination" 
-                className="px-4 py-2 rounded-full text-sm bg-gray-100 border border-gray-300 outline-none"
-                style={{ fontSize: 18, width: '190px' }}
-              />
-              <input 
-                type="text" 
-                placeholder="Check-in: May 12" 
-                className="px-4 py-2 rounded-full text-sm bg-gray-100 border border-gray-300 outline-none"
-                style={{ fontSize: 18, width: '190px' }}
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input 
-                type="text" 
-                placeholder="Check-out: May 15" 
-                className="px-4 py-2 rounded-full text-sm bg-gray-100 border border-gray-300 outline-none"
-                style={{ fontSize: 18, width: '190px' }}
-              />
-              <StyledButton variant="primary" style={{ padding: '10px 20px', fontSize: 18, width: '190px' }}>Find Hotels →</StyledButton>
-            </div>
+          {/* Filters Row - Desktop */}
+          <div className="hidden lg:flex items-center gap-3 mt-4">
+            <input type="text" placeholder="Enter Destination" className="flex-1 px-4 py-3 rounded-full bg-gray-100 border border-gray-200 text-sm outline-none" />
+            <input type="text" placeholder="Check-in: May 12" className="w-40 px-4 py-3 rounded-full bg-gray-100 border border-gray-200 text-sm outline-none" />
+            <input type="text" placeholder="Check-out: May 15" className="w-40 px-4 py-3 rounded-full bg-gray-100 border border-gray-200 text-sm outline-none" />
+            <button className="px-6 py-3 bg-orange-500 text-white font-semibold rounded-full text-sm">Find Hotels →</button>
           </div>
         </div>
       </div>
 
-      {/* Main Content - with top padding for fixed header */}
-      <div className="px-4 max-w-[440px] mx-auto" style={{ paddingTop: contentPadding }}>
-        {/* Featured Hotel Card */}
-        <div
-          className="rounded-3xl overflow-hidden mb-6"
-          style={{
-            backgroundColor: '#FFFFFF',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
-            border: '1px solid #E5E5E5'
-          }}
-        >
-          {/* Image Section */}
-          <div className="relative">
-            <img src={featuredHotel.image} alt={featuredHotel.name} className="w-full h-56 object-cover" />
-            <div
-              className="absolute top-3 left-3 px-2.5 py-1 rounded-full"
-              style={{ backgroundColor: '#10B981' }}
-            >
-              <span className="text-[10px] font-bold text-white">Best Choice</span>
+      {/* Main Content */}
+      <div className="px-4 lg:px-6" style={{ paddingTop: contentPadding }}>
+        <div className="max-w-5xl mx-auto">
+          {/* Featured Hotel Card */}
+          <div className="bg-white rounded-2xl lg:rounded-3xl border-2 border-blue-400 shadow-lg overflow-hidden mb-6">
+            <div className="lg:flex">
+              {/* Image */}
+              <div className="relative lg:w-2/5 lg:flex-shrink-0">
+                <img src={featuredHotel.image} alt={featuredHotel.name} className="w-full h-56 lg:h-full object-cover" />
+                <span className="absolute top-3 left-3 bg-green-500 text-white text-[10px] lg:text-xs font-bold px-3 py-1 rounded-full">
+                  {featuredHotel.badge}
+                </span>
+              </div>
+
+              {/* Details */}
+              <div className="p-4 lg:p-6 lg:flex-1">
+                <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2">{featuredHotel.name}</h3>
+
+                {/* Rating */}
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="flex">
+                    {[1, 2, 3, 4, 5].map(s => <span key={s} className="text-orange-400">★</span>)}
+                  </div>
+                  <span className="font-semibold text-gray-900">{featuredHotel.rating}</span>
+                </div>
+
+                {/* Price */}
+                <div className="flex items-baseline gap-1 mb-4">
+                  <span className="text-2xl lg:text-3xl font-bold text-gray-900">{featuredHotel.price}</span>
+                  <span className="text-gray-500">/night</span>
+                </div>
+
+                {/* Amenities */}
+                <div className="flex flex-wrap gap-3 mb-4">
+                  {featuredHotel.amenities.map((a, i) => (
+                    <span key={i} className="text-xs lg:text-sm text-gray-600">{a}</span>
+                  ))}
+                </div>
+
+                {/* Book Button */}
+                <button
+                  className="w-full py-3 rounded-full text-white font-semibold shadow-lg"
+                  style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
+                >
+                  Book This Stay
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Hotel Info */}
-          <div className="p-4">
-            <h3 className="text-xl font-bold mb-1" style={{ color: '#111111' }}>
-              {featuredHotel.name}
-            </h3>
-
-            {/* Rating */}
-            <div className="flex items-center gap-2 mb-2">
-              <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <svg key={star} width="16" height="16" viewBox="0 0 24 24" fill="#FF6F00" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 .587l3.668 7.431 8.2 1.193-5.934 5.79 1.402 8.175L12 18.896l-7.336 3.88 1.402-8.175L.132 9.211l8.2-1.193z" />
-                  </svg>
-                ))}
-              </div>
-              <span className="text-sm font-semibold" style={{ color: '#111111' }}>{featuredHotel.rating}</span>
-            </div>
-
-            {/* Price */}
-            <div className="mb-3">
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold" style={{ color: '#111111' }}>{featuredHotel.price}</span>
-                <span className="text-sm" style={{ color: '#757575' }}>/ night</span>
-              </div>
-            </div>
-
-            {/* Amenities */}
-            <div className="space-y-2 mb-4">
-              {featuredHotel.amenities.map((amenity, index) => (
-                <div key={index} className="flex items-center gap-2 text-sm" style={{ color: '#111111' }}>
-                  <span>{amenity.icon}</span>
-                  <span className="text-xs" style={{ color: '#757575' }}>{amenity.text}</span>
+          {/* Why This Hotel */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-4 lg:p-6 mb-6 shadow-sm">
+            <h4 className="text-base lg:text-lg font-bold text-gray-900 mb-3">Why This Hotel Works for You</h4>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+              {featuredHotel.features.map((f, i) => (
+                <div key={i} className="flex items-center gap-2 text-sm text-gray-600">
+                  <span className="text-green-500">✓</span>
+                  <span>{f}</span>
                 </div>
               ))}
             </div>
-
-            {/* Description */}
-            <p className="text-xs mb-4" style={{ color: '#757575' }}>
-              {featuredHotel.description}
-            </p>
-
-            {/* Book Button */}
-            <div className="mb-4">
-              <StyledButton variant="primary" style={{ width: '100%', padding: '12px 0', fontSize: 15 }}>Book This Stay</StyledButton>
-            </div>
-
-            {/* Why This Hotel */}
-            <div>
-              <h4 className="text-sm font-bold mb-2" style={{ color: '#111111' }}>
-                Why This Hotel Works for You
-              </h4>
-              <div className="space-y-1.5">
-                {featuredHotel.features.map((feature, index) => (
-                  <div key={index} className="flex items-start gap-2">
-                    <span className="text-green-500 text-xs mt-0.5">✓</span>
-                    <span className="text-xs" style={{ color: '#757575' }}>{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Best Alternative Options */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold" style={{ color: '#111111' }}>
-              Best Alternative Options near you
-            </h3>
-            <button className="text-gray-400">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="6" r="1.5" />
-                <circle cx="12" cy="12" r="1.5" />
-                <circle cx="12" cy="18" r="1.5" />
-              </svg>
-            </button>
           </div>
 
-          {/* Alternative Items */}
-          <div className="space-y-3">
+          {/* Alternatives */}
+          <h3 className="text-sm lg:text-base font-bold text-gray-900 mb-3">Best Alternative Options near you</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {alternatives.map((item) => (
-              <div
-                key={item.id}
-                className="flex gap-3 p-3 rounded-2xl"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
-                  border: '1px solid #F5F5F5'
-                }}
-              >
-                {/* Image */}
-                <div className="w-28 h-24 rounded-xl overflow-hidden flex-shrink-0">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0 flex flex-col">
-                  <h4 className="text-sm font-bold mb-0.5" style={{ color: '#111111' }}>
-                    {item.name}
-                  </h4>
-                  <p className="text-xs mb-2" style={{ color: '#757575' }}>
-                    {item.category}
-                  </p>
-                  <div className="flex items-center gap-2 mb-auto">
-                    <span className="text-sm font-bold" style={{ color: '#111111' }}>
-                      {item.priceRange}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 mt-2">
-                    <StyledButton variant="ghost" style={{ padding: '8px 12px', fontSize: 13, border: '1px solid #2196F3', color: '#2196F3' }}>View Details</StyledButton>
-                    <StyledButton variant="primary" style={{ flex: 1, padding: '8px 12px', fontSize: 13 }}>Book This OYO</StyledButton>
+              <div key={item.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <img src={item.image} alt={item.name} className="w-full h-32 lg:h-40 object-cover" />
+                <div className="p-4">
+                  <h4 className="font-bold text-gray-900 mb-1">{item.name}</h4>
+                  <p className="text-xs text-gray-500 mb-2">{item.category}</p>
+                  <p className="font-bold text-gray-900 mb-3">{item.price}</p>
+                  <div className="flex gap-2">
+                    <button className="flex-1 py-2 text-xs font-medium border border-blue-500 text-blue-500 rounded-full">View Details</button>
+                    <button className="flex-1 py-2 text-xs font-medium bg-orange-500 text-white rounded-full">Book Now</button>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-[10px] lg:text-xs text-gray-500">Note: This is a trial version. Your feedback will help us improve.</p>
+            <button className="mt-2 px-6 py-2 text-xs font-medium border border-gray-300 rounded-full hover:bg-gray-50">Feedback</button>
           </div>
         </div>
       </div>
