@@ -1,12 +1,55 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BsSearch, BsGeoAlt } from 'react-icons/bs'
 import { MdLocationOn } from 'react-icons/md'
+import MapView from '../map/MapView'
+import { generateVehiclesNearPickupReal, geocodeLocationReal } from '../../utils/vehicleGenerator'
 
 const RidesPage = () => {
   const [selectedTransport, setSelectedTransport] = useState(null)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const [pickupLocation, setPickupLocation] = useState('')
   const [dropLocation, setDropLocation] = useState('')
+  const [vehicles, setVehicles] = useState([])
+  const [pickupCoords, setPickupCoords] = useState(null)
+  const [dropCoords, setDropCoords] = useState(null)
+  const [isLoadingVehicles, setIsLoadingVehicles] = useState(false)
+
+  // Generate vehicles when pickup or drop location changes
+  useEffect(() => {
+    const loadVehicles = async () => {
+      if (pickupLocation.trim()) {
+        setIsLoadingVehicles(true)
+        try {
+          // Geocode pickup location
+          const coords = await geocodeLocationReal(pickupLocation)
+          setPickupCoords(coords)
+
+          // Geocode drop location if provided
+          if (dropLocation.trim()) {
+            const dropCoords = await geocodeLocationReal(dropLocation)
+            setDropCoords(dropCoords)
+          } else {
+            setDropCoords(null)
+          }
+
+          // Generate vehicles near pickup with real road-snapping
+          const newVehicles = await generateVehiclesNearPickupReal(coords.lat, coords.lng)
+          setVehicles(newVehicles)
+        } catch (error) {
+          console.error('Error loading vehicles:', error)
+        } finally {
+          setIsLoadingVehicles(false)
+        }
+      } else {
+        // Clear vehicles if no pickup location
+        setVehicles([])
+        setPickupCoords(null)
+        setDropCoords(null)
+      }
+    }
+
+    loadVehicles()
+  }, [pickupLocation, dropLocation]) // Regenerate on either location change
 
   const transportTypes = [
     { id: 1, emoji: '🏍️', label: 'Bike', color: '#FF7043' },
@@ -50,45 +93,18 @@ const RidesPage = () => {
         </div>
 
         {/* Map Section */}
-        <div className="w-full rounded-3xl overflow-hidden mb-6 relative" style={{ height: 420, backgroundColor: '#F6F7F8' }}>
-          {/* subtle map-like background (placeholder) */}
-          <div className="absolute inset-0 opacity-90" style={{ backgroundImage: 'linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01))' }} />
+        <MapView
+          pickupCoords={pickupCoords}
+          dropCoords={dropCoords}
+          vehicles={vehicles}
+        />
 
-          {/* route path */}
-          <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
-            <path d="M 50 320 Q 110 260, 170 240 T 260 200 T 320 170 T 360 120" fill="none" stroke="#1976D2" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-
-          {/* start marker */}
-          <div style={{ position: 'absolute', left: 36, bottom: 58, zIndex: 3 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 18, background: '#4CAF50', border: '3px solid white', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }} />
-            <div style={{ marginTop: 8, fontSize: 13, background: 'white', padding: '6px 8px', borderRadius: 8, boxShadow: '0 4px 10px rgba(0,0,0,0.08)', fontWeight: 600 }}>MG Road</div>
+        {/* Loading indicator */}
+        {isLoadingVehicles && (
+          <div className="mt-2 text-center text-sm" style={{ color: '#9E9E9E' }}>
+            Loading vehicles...
           </div>
-
-          {/* end marker */}
-          <div style={{ position: 'absolute', right: 36, top: 38, zIndex: 3, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ fontSize: 20 }}>🏁</div>
-            <div style={{ width: 36, height: 36, borderRadius: 18, background: '#4CAF50', border: '3px solid white', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }} />
-          </div>
-
-          {/* small vehicle icons along route */}
-          <div style={{ position: 'absolute', left: 120, bottom: 160, zIndex: 3 }}>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <div style={{ fontSize: 26 }}>🛺</div>
-              <div style={{ fontSize: 26 }}>🚚</div>
-            </div>
-          </div>
-
-          {/* provider badges */}
-          <div style={{ position: 'absolute', left: 20, bottom: 20, zIndex: 4, display: 'flex', gap: 8 }}>
-            <div style={{ background: '#FFD700', color: '#111', padding: '6px 10px', borderRadius: 999, fontWeight: 700, fontSize: 12 }}>Rapido</div>
-            <div style={{ background: '#111', color: '#fff', padding: '6px 10px', borderRadius: 999, fontWeight: 700, fontSize: 12 }}>Uber</div>
-            <div style={{ background: '#fff', color: '#111', padding: '6px 10px', borderRadius: 999, fontWeight: 700, fontSize: 12, border: '1.5px solid #E5E5E5', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 18, height: 18, background: '#FFD700', borderRadius: 999 }} />
-              <div>OLA</div>
-            </div>
-          </div>
-        </div>
+        )}
 
         {/* Search Section - Outside of map */}
         <div className="mt-6 px-4">
@@ -158,6 +174,172 @@ const RidesPage = () => {
             )}
           </div>
         </div>
+
+        {/* Ride Recommendations - Show when locations are entered */}
+        {isSearchFocused && pickupLocation && dropLocation && (
+          <div className="mt-6 px-4">
+            <div className="mx-auto" style={{ maxWidth: 720 }}>
+              {/* Best Choice Section */}
+              <div className="mb-4">
+                <h3 className="text-sm font-semibold mb-3" style={{ color: '#111111' }}>Best Choice</h3>
+                <div
+                  className="rounded-2xl p-4"
+                  style={{
+                    border: '2px solid #FF6B6B',
+                    backgroundColor: '#FFFFFF',
+                    boxShadow: '0 4px 12px rgba(255, 107, 107, 0.15)'
+                  }}
+                >
+                  {/* Header with logo and price */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="px-3 py-1 rounded-full text-xs font-bold"
+                        style={{ backgroundColor: '#FFD600', color: '#111111' }}
+                      >
+                        rapido
+                      </div>
+                      <span className="font-semibold" style={{ color: '#111111' }}>Rapido</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold" style={{ color: '#111111' }}>₹35</div>
+                    </div>
+                  </div>
+
+                  {/* Ride details */}
+                  <div className="mb-3">
+                    <p className="text-sm font-medium" style={{ color: '#111111' }}>2 min • 10 min ride</p>
+                    <p className="text-xs" style={{ color: '#757575' }}>Fastest arrival at lowest price</p>
+                  </div>
+
+                  {/* Book button */}
+                  <button
+                    className="w-full py-3 rounded-full font-semibold text-sm"
+                    style={{ backgroundColor: '#111111', color: '#FFFFFF' }}
+                  >
+                    Book Rapido
+                  </button>
+
+                  {/* Features list */}
+                  <div className="mt-4 space-y-2">
+                    {[
+                      'Automatically applied all available offers and coupons',
+                      'Best balance of price, comfort, and travel time',
+                      'High availability with reliable on-time performance',
+                      'High availability with reliable on-time performance',
+                      'Verified choice based on real-time data and pricing'
+                    ].map((feature, idx) => (
+                      <div key={idx} className="flex items-start gap-2">
+                        <svg
+                          className="flex-shrink-0 mt-0.5"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            d="M13.3333 4L6 11.3333L2.66667 8"
+                            stroke="#4CAF50"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <span className="text-xs leading-relaxed" style={{ color: '#111111' }}>
+                          {feature}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Best Alternative Options */}
+              <div className="mb-4">
+                <h3 className="text-sm font-semibold mb-3" style={{ color: '#111111' }}>Best Alternative Options</h3>
+                <div className="space-y-3">
+                  {/* Alternative Option 1 - Uber */}
+                  <div
+                    className="rounded-2xl p-4"
+                    style={{
+                      border: '1.5px solid #E5E5E5',
+                      backgroundColor: '#FFFFFF',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+                    }}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="px-3 py-1 rounded-full text-xs font-bold"
+                          style={{ backgroundColor: '#111111', color: '#FFFFFF' }}
+                        >
+                          uber
+                        </div>
+                        <span className="font-semibold text-sm" style={{ color: '#111111' }}>Uber</span>
+                      </div>
+                      <div className="text-xl font-bold" style={{ color: '#111111' }}>₹42</div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium" style={{ color: '#111111' }}>3 min • 12 min ride</p>
+                        <p className="text-xs" style={{ color: '#757575' }}>Premium comfort and safety</p>
+                      </div>
+                      <button
+                        className="px-6 py-2 rounded-full font-semibold text-sm"
+                        style={{ backgroundColor: '#111111', color: '#FFFFFF' }}
+                      >
+                        Book Uber
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Alternative Option 2 - OLA */}
+                  <div
+                    className="rounded-2xl p-4"
+                    style={{
+                      border: '1.5px solid #E5E5E5',
+                      backgroundColor: '#FFFFFF',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+                    }}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="px-3 py-1 rounded-full text-xs font-bold"
+                          style={{ backgroundColor: '#4CAF50', color: '#FFFFFF' }}
+                        >
+                          ola
+                        </div>
+                        <span className="font-semibold text-sm" style={{ color: '#111111' }}>OLA</span>
+                      </div>
+                      <div className="text-xl font-bold" style={{ color: '#111111' }}>₹38</div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium" style={{ color: '#111111' }}>4 min • 11 min ride</p>
+                        <p className="text-xs" style={{ color: '#757575' }}>Reliable service with good availability</p>
+                      </div>
+                      <button
+                        className="px-6 py-2 rounded-full font-semibold text-sm"
+                        style={{ backgroundColor: '#111111', color: '#FFFFFF' }}
+                      >
+                        Book OLA
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Confirm Ride Button */}
+              <button
+                className="w-full py-4 rounded-full font-bold text-base mb-6"
+                style={{ backgroundColor: '#FF5722', color: '#FFFFFF', boxShadow: '0 4px 12px rgba(255, 87, 34, 0.3)' }}
+              >
+                Confirm Ride
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Note at bottom - only show when search is not focused */}
         {!isSearchFocused && (
