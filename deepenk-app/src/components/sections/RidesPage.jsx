@@ -1,13 +1,55 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BsSearch, BsGeoAlt } from 'react-icons/bs'
 import { MdLocationOn } from 'react-icons/md'
-import MapPreview from '../common/MapPreview'
+import MapView from '../map/MapView'
+import { generateVehiclesNearPickupReal, geocodeLocationReal } from '../../utils/vehicleGenerator'
 
 const RidesPage = () => {
   const [selectedTransport, setSelectedTransport] = useState(null)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const [pickupLocation, setPickupLocation] = useState('')
   const [dropLocation, setDropLocation] = useState('')
+  const [vehicles, setVehicles] = useState([])
+  const [pickupCoords, setPickupCoords] = useState(null)
+  const [dropCoords, setDropCoords] = useState(null)
+  const [isLoadingVehicles, setIsLoadingVehicles] = useState(false)
+
+  // Generate vehicles when pickup or drop location changes
+  useEffect(() => {
+    const loadVehicles = async () => {
+      if (pickupLocation.trim()) {
+        setIsLoadingVehicles(true)
+        try {
+          // Geocode pickup location
+          const coords = await geocodeLocationReal(pickupLocation)
+          setPickupCoords(coords)
+
+          // Geocode drop location if provided
+          if (dropLocation.trim()) {
+            const dropCoords = await geocodeLocationReal(dropLocation)
+            setDropCoords(dropCoords)
+          } else {
+            setDropCoords(null)
+          }
+
+          // Generate vehicles near pickup with real road-snapping
+          const newVehicles = await generateVehiclesNearPickupReal(coords.lat, coords.lng)
+          setVehicles(newVehicles)
+        } catch (error) {
+          console.error('Error loading vehicles:', error)
+        } finally {
+          setIsLoadingVehicles(false)
+        }
+      } else {
+        // Clear vehicles if no pickup location
+        setVehicles([])
+        setPickupCoords(null)
+        setDropCoords(null)
+      }
+    }
+
+    loadVehicles()
+  }, [pickupLocation, dropLocation]) // Regenerate on either location change
 
   const transportTypes = [
     { id: 1, emoji: '🏍️', label: 'Bike', color: '#FF7043' },
@@ -51,27 +93,18 @@ const RidesPage = () => {
         </div>
 
         {/* Map Section */}
-        <div className="w-full rounded-3xl overflow-hidden mb-6 relative" style={{ height: 'clamp(320px, 50vh, 500px)', backgroundColor: '#F6F7F8' }}>
-          <MapPreview />
-          {/* Ride Provider Logos - Desktop overlay */}
-          <div className="hidden lg:flex absolute inset-0 items-center justify-center pointer-events-none">
-            <div className="absolute top-4 left-4 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
-              <span className="text-sm font-semibold">Rapido</span>
-            </div>
-            <div className="absolute top-4 right-4 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
-              <span className="text-sm font-semibold">Uber</span>
-            </div>
-            <div className="absolute bottom-4 left-4 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
-              <span className="text-sm font-semibold">Auto</span>
-            </div>
-            <div className="absolute bottom-4 right-4 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
-              <span className="text-sm font-semibold">Ola</span>
-            </div>
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white px-3 py-1.5 rounded-full shadow-md flex items-center gap-2">
-              <span className="text-sm font-semibold">Parcel</span>
-            </div>
+        <MapView
+          pickupCoords={pickupCoords}
+          dropCoords={dropCoords}
+          vehicles={vehicles}
+        />
+
+        {/* Loading indicator */}
+        {isLoadingVehicles && (
+          <div className="mt-2 text-center text-sm" style={{ color: '#9E9E9E' }}>
+            Loading vehicles...
           </div>
-        </div>
+        )}
 
         {/* Search Section - Outside of map */}
         <div className="mt-6 px-4">
