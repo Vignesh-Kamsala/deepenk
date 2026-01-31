@@ -24,18 +24,19 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Overlay */}
+      {/* Overlay - only show on mobile when sidebar is open */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-transparent z-40 transition-opacity"
+          className="fixed inset-0 bg-transparent z-40 transition-opacity lg:hidden"
           onClick={onClose}
         />
       )}
 
-      {/* Drawer */}
+      {/* Drawer - permanent on desktop (lg:), drawer on mobile */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-full max-w-xs sm:max-w-sm md:max-w-md bg-white flex flex-col z-50 shadow-xl rounded-r-3xl transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed left-0 top-0 h-screen w-[220px] bg-white flex flex-col z-50 shadow-xl 
+          rounded-r-3xl lg:rounded-none transform transition-transform duration-300 
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
         style={{ borderRight: '1px solid #E5E5E5' }}
       >
         {/* Logo Section */}
@@ -67,7 +68,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               to={path}
               onClick={onClose}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive ? 'bg-gray-100' : 'hover:bg-gray-50'
+                `flex items-center gap-3 px-4 py-3 rounded-full transition-colors ${isActive ? 'bg-gray-100' : 'hover:bg-gray-50'
                 }`
               }
             >
@@ -79,13 +80,17 @@ const Sidebar = ({ isOpen, onClose }) => {
 
         {/* Bottom Section */}
         <div className="p-4 space-y-2" style={{ borderTop: '1px solid #E5E5E5' }}>
-          <button className="flex items-center gap-3 px-4 py-3 rounded-full hover:bg-gray-50 transition-colors w-full">
+          <NavLink
+            to="/profile"
+            onClick={onClose}
+            className="flex items-center gap-3 px-4 py-3 rounded-full hover:bg-gray-50 transition-colors w-full"
+          >
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
               <img src={userIcon} alt="Profile" className="w-4 h-4 object-contain" />
             </div>
             <span className="font-medium text-sm" style={{ color: '#111111' }}>Profile</span>
             <BsSun className="ml-auto text-lg" style={{ color: '#111111' }} />
-          </button>
+          </NavLink>
         </div>
       </aside>
     </>

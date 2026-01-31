@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { BsMicFill } from 'react-icons/bs'
-import logoImg from '../../assets/sidebar/logo.png';
-import SearchMapModal from '../common/SearchMapModal'
 
 const ShoppingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [cardQuery, setCardQuery] = useState('')
+  const headerRef = useRef(null)
+  const [contentPadding, setContentPadding] = useState(0)
 
   const categories = [
     { id: 1, emoji: '📱', label: 'Mobiles' },
@@ -14,7 +16,7 @@ const ShoppingPage = () => {
     { id: 5, emoji: '📺', label: 'Appliances' },
     { id: 6, emoji: '🧸', label: 'Toys' },
     { id: 7, emoji: '🏠', label: 'Home' },
-    { id: 8, emoji: '🏏', label: 'sports' }
+    { id: 8, emoji: '🏏', label: 'Sports' }
   ]
 
   const featuredProduct = {
@@ -23,13 +25,14 @@ const ShoppingPage = () => {
     seller: 'Lotus Palace',
     price: '₹129999',
     rating: '4.5',
-    platform: 'Amazon'
+    platform: 'Amazon',
+    image: 'https://cdn-icons-png.flaticon.com/512/2721/2721269.png'
   }
 
   const alternatives = [
     {
       id: 1,
-      image: '💻',
+      image: 'https://cdn-icons-png.flaticon.com/512/2721/2721269.png',
       name: 'HP victus 3',
       seller: 'Reliance',
       price: '₹60000',
@@ -39,24 +42,26 @@ const ShoppingPage = () => {
     },
     {
       id: 2,
-      image: '🖥️',
-      name: 'HP victus 3',
-      seller: 'Reliance',
-      price: '₹60000',
-      originalPrice: '₹85000',
-      rating: '4.1',
+      image: 'https://cdn-icons-png.flaticon.com/512/2721/2721269.png',
+      name: 'Dell Inspiron 15',
+      seller: 'Croma',
+      price: '₹55000',
+      originalPrice: '₹75000',
+      rating: '4.2',
       platform: 'Amazon'
     }
   ]
 
-  const [cardQuery, setCardQuery] = useState('')
-  const [showSearchModal, setShowSearchModal] = useState(false)
-  const headerRef = useRef(null)
-  const [contentPadding, setContentPadding] = useState(0)
+  const insights = [
+    { title: 'AI Review Summary', content: 'Apple M3 Pro is a powerful and efficient chip designed for professionals. It delivers high performance for tasks like video editing, coding, and design.' },
+    { title: 'Bundle Suggestion', content: 'Apple Magic Keyboard with Touch ID & Numeric Keypad. Screen + Keyboard Protector Set – 20% discount' },
+    { title: '🎟️ Applied offers', items: ['New-user coupon DE****6 applied', 'SBI Credit Card applied', 'Delivery fee waived'] },
+    { title: 'Payment Suggestion', items: ['Paytm UPI → Get 20% cashback (₹40)', 'PhonePe UPI → Scratch card rewards', 'Google Pay → Instant ₹25 off'] }
+  ]
 
   useEffect(() => {
     const calc = () => {
-      if (headerRef.current) setContentPadding(headerRef.current.offsetHeight + 12)
+      if (headerRef.current) setContentPadding(headerRef.current.offsetHeight + 16)
     }
     calc()
     window.addEventListener('resize', calc)
@@ -64,240 +69,162 @@ const ShoppingPage = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-white pb-8">
-      {/* Search Bar - Fixed at top below MobileHeader (fixed so it never scrolls) */}
-      <div ref={headerRef} className="fixed top-14 left-0 right-0 bg-white z-40 px-4 pt-2 pb-3 border-b border-gray-200">
-        {/* Plus Button + Search Input */}
-        <div className="flex items-center gap-3 mb-3">
-          <button
-            className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 border border-gray-200 bg-white"
-            style={{ boxShadow: '0 8px 20px rgba(0,0,0,0.08)' }}
-          >
-            <span className="text-2xl" style={{ color: '#757575' }}>+</span>
-          </button>
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => setShowSearchModal(true)}
-            className="flex-1 flex items-center gap-4 px-6 py-4 rounded-full border border-gray-200 bg-white"
-            style={{ boxShadow: '0 12px 30px rgba(0,0,0,0.06)' }}
-          >
-            <input
-              type="text"
-              readOnly
-              placeholder="Type brifely what you want"
-              className="flex-1 outline-none text-[15px] bg-transparent cursor-pointer"
-              style={{ color: '#111111' }}
-            />
-            <button className="flex-shrink-0">
-              <BsMicFill className="text-[18px]" style={{ color: '#111111' }} />
+    <div className="min-h-screen bg-gray-50 lg:bg-white pb-8">
+      {/* Header - Fixed */}
+      <div ref={headerRef} className="fixed top-14 lg:top-0 left-0 lg:left-[220px] right-0 bg-white z-40 px-4 lg:px-6 pt-3 lg:pt-5 pb-3 border-b border-gray-200">
+        {/* Search Bar */}
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4">
+            <button className="w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
+              <span className="text-xl lg:text-2xl text-gray-500">+</span>
             </button>
-            <button
-              className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-black"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="#FFFFFF" viewBox="0 0 24 24" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        {/* Category Icons */}
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className="flex-shrink-0 flex flex-col items-center gap-1 transition-all active:scale-95"
-            >
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{
-                  backgroundColor: selectedCategory === category.id ? '#FFF9E6' : '#F5F5F5',
-                  border: selectedCategory === category.id ? '2px solid #FFD700' : '1px solid #E5E5E5'
-                }}
-              >
-                <span className="text-lg">{category.emoji}</span>
-              </div>
-              <span className="text-[9px]" style={{ color: '#757575' }}>{category.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Small query card inside fixed header so it's non-moving */}
-        <div className="w-full mt-2 px-2">
-          <div className="w-full bg-white rounded-xl border-2 border-black px-3 py-2 flex items-center" style={{borderRadius: 18}}>
-            <input
-              aria-label="Quick query"
-              value={cardQuery}
-              onChange={(e) => setCardQuery(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500 min-w-0"
-              placeholder="which type of loptop you need ?"
-              style={{color: '#111', paddingLeft: 6}}
-            />
-            <button
-              onClick={() => console.log('Query submitted:', cardQuery)}
-              className="ml-3 flex items-center gap-2 bg-white border border-black px-3 py-1 rounded-full text-sm font-medium hover:bg-gray-50"
-            >
-              <span>Next</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 8.25L18 12m0 0l-4.5 3.75M18 12H6" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Main Content - with top padding for fixed header (calculated) */}
-      <div className="px-2" style={{ paddingTop: contentPadding }}>
-        {/* Featured Product Card - Figma Style */}
-        <div
-          className="rounded-2xl border border-gray-300 bg-white mb-6 shadow-md overflow-hidden flex flex-col w-full"
-          style={{ minHeight: '260px', position: 'relative' }}
-        >
-          {/* Top Section: Image and Info Side by Side */}
-          <div className="flex flex-row gap-3 p-4 pb-0">
-            {/* Image */}
-            <div className="flex-shrink-0 flex items-start justify-center">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/2721/2721269.png"
-                alt="Laptop"
-                className="w-20 h-16 object-contain rounded-xl border border-gray-200"
+            <div className="flex-1 flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-full bg-gray-100 border border-gray-200">
+              <input
+                type="text"
+                placeholder="Ask Deepenk"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 outline-none text-sm lg:text-base bg-transparent"
               />
-            </div>
-            {/* Info */}
-            <div className="flex-1 flex flex-col gap-1">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="bg-green-500 text-white text-[10px] font-bold rounded-full px-2 py-0.5">BEST VALUE</span>
-              </div>
-              <h3 className="text-base font-bold text-gray-900 leading-tight">Apple mac M3 Pro</h3>
-              <p className="text-xs text-gray-500">Lotus Palace</p>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-lg font-bold text-gray-900">₹129999</span>
-                <span className="flex items-center gap-1 text-yellow-500 text-sm font-medium">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" /></svg>
-                  4.5
-                </span>
-              </div>
-              <button
-                className="w-full py-2.5 rounded-full flex items-center justify-center gap-2 transition-all active:scale-98 shadow-lg mt-1 mb-2"
-                style={{ background: 'linear-gradient(90deg, #FF9900 0%, #FF6F00 100%)', boxShadow: '0 4px 16px 0 rgba(255, 111, 0, 0.15)' }}
-              >
-                <span className="text-base font-bold text-white">Order in Amazon</span>
-                <svg className="w-5 h-5" fill="none" stroke="white" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              <BsMicFill className="text-gray-700" />
+              <button className="w-9 h-9 lg:w-10 lg:h-10 rounded-full bg-black flex items-center justify-center">
+                <svg width="16" height="16" fill="none" stroke="#FFF" viewBox="0 0 24 24" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </button>
             </div>
           </div>
-          {/* Insights Box - Full width */}
-          <div className="border-t border-gray-200 p-3 bg-white w-full">
-            <h4 className="text-xs font-bold mb-1 text-gray-900">DEEPENK INSIGHTS</h4>
-            <div className="mb-1">
-              <span className="block text-[11px] font-bold text-gray-900 mb-0.5">AI Review Summary</span>
-              <span className="block text-[11px] text-gray-600">Apple M3 Pro is a powerful and efficient chip designed for professionals. It delivers high performance for tasks like video editing, coding, and design, with advanced graphics, fast processing, and excellent battery efficiency, making it ideal for demanding workflows.</span>
-            </div>
-            <div className="mb-1">
-              <span className="block text-[11px] font-bold text-gray-900 mb-0.5">Bundle Suggestion</span>
-              <span className="block text-[11px] text-gray-600">Apple Magic Keyboard with Touch ID & Numeric Keypad<br />Screen + Keyboard Protector Set – Keeps display discount ~20%</span>
-            </div>
-            <div className="mb-1">
-              <span className="block text-[11px] font-bold text-gray-900 mb-0.5">Applied offers and Coupons</span>
-              <ul className="list-disc ml-4 text-[11px] text-gray-600">
-                <li>New-user coupon DE****6 applied</li>
-                <li>SBI Credit Card applied</li>
-                <li>Delivery fee waived</li>
-              </ul>
-            </div>
-            <div>
-              <span className="block text-[11px] font-bold text-gray-900 mb-0.5">Payment Suggestion</span>
-              <ul className="list-disc ml-4 text-[11px] text-gray-600">
-                <li>Paytm UPI → Get 20% cashback (₹40)</li>
-                <li>PhonePe UPI → Scratch card rewards</li>
-                <li>Google Pay → Instant ₹25 off</li>
-              </ul>
-            </div>
-          </div>
-        </div>
 
-        {/* Best Alternative Options */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold" style={{ color: '#111111' }}>
-              Best Alternative Options near you
-            </h3>
-            <button className="text-gray-400">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="6" r="1.5" />
-                <circle cx="12" cy="12" r="1.5" />
-                <circle cx="12" cy="18" r="1.5" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Alternative Items */}
-          <div className="space-y-3">
-            {alternatives.map((item) => (
-              <div
-                key={item.id}
-                className="flex gap-3 p-3 rounded-2xl"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
-                  border: '1px solid #F5F5F5'
-                }}
+          {/* Categories */}
+          <div className="flex gap-3 lg:gap-4 overflow-x-auto pb-2 scrollbar-hide lg:justify-center">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className="flex-shrink-0 flex flex-col items-center gap-1.5 transition-all"
               >
-                {/* Image */}
                 <div
-                  className="w-24 h-24 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: item.id === 1 ? '#8B4513' : '#F5F5F5' }}
+                  className={`w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center transition-all ${selectedCategory === cat.id
+                      ? 'bg-yellow-50 border-2 border-yellow-400'
+                      : 'bg-gray-100 border border-gray-200'
+                    }`}
                 >
-                  <span className="text-4xl">{item.image}</span>
+                  <span className="text-xl lg:text-2xl">{cat.emoji}</span>
                 </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold mb-0.5" style={{ color: '#111111' }}>
-                    {item.name}
-                  </h4>
-                  <p className="text-xs mb-2" style={{ color: '#757575' }}>
-                    {item.seller}
-                  </p>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-base font-bold" style={{ color: '#111111' }}>
-                      {item.price}
-                    </span>
-                    <span className="text-xs line-through" style={{ color: '#BDBDBD' }}>
-                      {item.originalPrice}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1 mb-3">
-                    <span className="text-yellow-500 text-sm">⭐</span>
-                    <span className="text-xs font-medium" style={{ color: '#111111' }}>
-                      {item.rating}
-                    </span>
-                  </div>
-
-                  {/* Order Button */}
-                  <button
-                    className="px-4 py-2 rounded-full transition-all active:scale-95"
-                    style={{
-                      backgroundColor: item.platform === 'Flipkart' ? '#FFD700' : '#10B981',
-                      color: item.platform === 'Flipkart' ? '#111111' : '#FFFFFF'
-                    }}
-                  >
-                    <span className="text-xs font-semibold">
-                      Order in {item.platform}
-                    </span>
-                  </button>
-                </div>
-              </div>
+                <span className="text-[10px] lg:text-xs text-gray-500">{cat.label}</span>
+              </button>
             ))}
           </div>
         </div>
       </div>
-      {showSearchModal && (
-        <SearchMapModal onClose={() => setShowSearchModal(false)} />
-      )}
-      {/* FooterNote now provided globally in Layout */}
+
+      {/* Main Content */}
+      <div className="px-4 lg:px-6" style={{ paddingTop: contentPadding }}>
+        <div className="max-w-5xl mx-auto">
+          {/* Best Value Label */}
+          <h2 className="text-sm lg:text-base font-semibold text-gray-800 mb-3">Best Value Recommendation</h2>
+
+          {/* Featured Product Card - Desktop: Side by Side */}
+          <div className="bg-white rounded-2xl lg:rounded-3xl border-2 border-yellow-400 shadow-lg overflow-hidden mb-6">
+            <div className="lg:flex">
+              {/* Left: Product Info */}
+              <div className="p-4 lg:p-6 lg:flex-1">
+                <div className="flex gap-4">
+                  {/* Image */}
+                  <div className="w-24 h-20 lg:w-32 lg:h-28 rounded-xl border border-gray-200 overflow-hidden flex-shrink-0">
+                    <img src={featuredProduct.image} alt={featuredProduct.name} className="w-full h-full object-contain p-2" />
+                  </div>
+
+                  {/* Details */}
+                  <div className="flex-1">
+                    <span className="inline-block bg-green-500 text-white text-[10px] lg:text-xs font-bold px-2 py-0.5 rounded-full mb-2">
+                      {featuredProduct.badge}
+                    </span>
+                    <h3 className="text-base lg:text-xl font-bold text-gray-900 mb-1">{featuredProduct.name}</h3>
+                    <p className="text-xs lg:text-sm text-gray-500 mb-2">{featuredProduct.seller}</p>
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-xl lg:text-2xl font-bold text-gray-900">{featuredProduct.price}</span>
+                      <span className="flex items-center gap-1 text-yellow-500 text-sm">⭐ {featuredProduct.rating}</span>
+                    </div>
+                    <button
+                      className="w-full lg:w-auto px-6 py-3 rounded-full text-white font-semibold text-sm lg:text-base shadow-lg"
+                      style={{ background: 'linear-gradient(90deg, #FF9900 0%, #FF6F00 100%)' }}
+                    >
+                      Order in {featuredProduct.platform} →
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Deepenk Insights */}
+              <div className="border-t lg:border-t-0 lg:border-l border-gray-200 p-4 lg:p-6 lg:w-[400px] bg-gradient-to-b from-green-50 to-white lg:bg-white">
+                <h4 className="text-sm lg:text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <span className="text-orange-500">💡</span> DEEPENK INSIGHTS
+                </h4>
+                <div className="space-y-3">
+                  {insights.map((insight, idx) => (
+                    <div key={idx}>
+                      <p className="text-xs lg:text-sm font-semibold text-gray-800 mb-1">{insight.title}</p>
+                      {insight.content && (
+                        <p className="text-xs lg:text-sm text-gray-600">{insight.content}</p>
+                      )}
+                      {insight.items && (
+                        <ul className="text-xs lg:text-sm text-gray-600 space-y-0.5">
+                          {insight.items.map((item, i) => (
+                            <li key={i} className="flex items-start gap-1">
+                              <span className="text-green-500">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Best Alternatives */}
+          <h3 className="text-sm lg:text-base font-bold text-gray-900 mb-3">Best Alternative Options</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {alternatives.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex gap-4">
+                  <div className="w-20 h-16 lg:w-24 lg:h-20 rounded-xl border border-gray-200 overflow-hidden flex-shrink-0">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-contain p-2" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-gray-900 mb-1">{item.name}</h4>
+                    <p className="text-xs text-gray-500 mb-2">{item.seller}</p>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-bold text-gray-900">{item.price}</span>
+                      <span className="text-xs text-gray-400 line-through">{item.originalPrice}</span>
+                      <span className="text-xs text-yellow-500">⭐ {item.rating}</span>
+                    </div>
+                    <button className="px-4 py-2 bg-orange-500 text-white text-xs font-semibold rounded-full">
+                      Order in {item.platform}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-[10px] lg:text-xs text-gray-500">
+              Note: This is a trial version. Your feedback will help us improve.
+            </p>
+            <button className="mt-2 px-6 py-2 text-xs font-medium border border-gray-300 rounded-full hover:bg-gray-50">
+              Feedback
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
