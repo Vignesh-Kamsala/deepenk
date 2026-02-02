@@ -115,7 +115,7 @@ const MapView = ({ pickupCoords, dropCoords, vehicles = [] }) => {
         : []
 
     return (
-        <div className="w-full rounded-3xl overflow-hidden" style={{ height: 420, position: 'relative' }}>
+        <div className="w-full rounded-3xl overflow-hidden" style={{ height: 420, position: 'relative', zIndex: 1 }}>
             <MapContainer
                 center={pickupCoords ? [pickupCoords.lat, pickupCoords.lng] : defaultCenter}
                 zoom={defaultZoom}

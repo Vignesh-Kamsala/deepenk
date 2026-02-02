@@ -114,7 +114,7 @@ const FoodPage = () => {
             <button className="w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
               <span className="text-xl lg:text-2xl text-gray-500">+</span>
             </button>
-            <div className="flex-1 flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-full bg-gray-100 border border-gray-200">
+            <div className="flex-1 flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-full bg-gray-100 border border-gray-200 shadow-lg">
               <input
                 type="text"
                   placeholder="Type briefly what you want to eat"

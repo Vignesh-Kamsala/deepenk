@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { BsMicFill } from 'react-icons/bs'
 
-const HERO_IMG = 'https://images.unsplash.com/photo-1501117716987-c8e1ecb210af?auto=format&fit=crop&w=1200&q=80'
-const ALT_IMG = 'https://images.unsplash.com/photo-1509057199576-632a47484ece?auto=format&fit=crop&w=800&q=80'
+const HERO_IMG = '../src/assets/Hotel Image Container.png'
+const ALT_IMG = '../src/assets/Card Image (2).png'
 
 const HotelsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -12,9 +12,9 @@ const HotelsPage = () => {
 
   const categories = [
     { id: 1, emoji: '🏨', label: 'Hotels' },
-    { id: 2, emoji: '🏖️', label: 'Resort' },
-    { id: 3, emoji: '🍽️', label: 'Restaurants' },
-    { id: 4, emoji: '🅿️', label: 'PG' }
+    { id: 2, emoji: '⛵', label: 'Resort' },
+    { id: 3, emoji: '🥤', label: 'Restaurants' },
+    { id: 4, emoji: '🏙️', label: 'PG' }
   ]
 
   const featuredHotel = {
@@ -48,16 +48,16 @@ const HotelsPage = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50 lg:bg-white pb-8">
+    <div className="min-h-screen bg-gray-50 lg:bg-white pb-8 lg:ml-[220px]">
       {/* Header - Fixed */}
-      <div ref={headerRef} className="fixed top-14 lg:top-0 left-0 lg:left-[220px] right-0 bg-white z-40 px-4 lg:px-6 pt-3 lg:pt-5 pb-4 border-b border-gray-200">
+      <div ref={headerRef} className="fixed top-14 lg:top-0 left-0 lg:left-[220px] right-0 bg-white z-30 px-4 lg:px-6 pt-3 lg:pt-5 pb-4 border-b border-gray-200">
         <div className="max-w-4xl mx-auto">
           {/* Search Bar */}
           <div className="flex items-center gap-3 mb-4">
             <button className="w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center border border-gray-200 bg-white shadow-sm">
               <span className="text-xl lg:text-2xl text-gray-500">+</span>
             </button>
-            <div className="flex-1 flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-full bg-gray-100 border border-gray-200">
+            <div className="flex-1 flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-full bg-gray-100 border border-gray-200 shadow-lg">
               <input
                 type="text"
                 placeholder="Ask Deepenk"
@@ -102,91 +102,131 @@ const HotelsPage = () => {
           </div>
 
           {/* Filters Row - Desktop */}
-          <div className="hidden lg:flex items-center gap-3 mt-4">
-            <input type="text" placeholder="Enter Destination" className="flex-1 px-4 py-3 rounded-full bg-gray-100 border border-gray-200 text-sm outline-none" />
-            <input type="text" placeholder="Check-in: May 12" className="w-40 px-4 py-3 rounded-full bg-gray-100 border border-gray-200 text-sm outline-none" />
-            <input type="text" placeholder="Check-out: May 15" className="w-40 px-4 py-3 rounded-full bg-gray-100 border border-gray-200 text-sm outline-none" />
-            <button className="px-6 py-3 bg-orange-500 text-white font-semibold rounded-full text-sm">Find Hotels →</button>
+          <div className="flex flex-wrap gap-2 mt-4">
+            <input 
+              type="text" 
+              placeholder="Enter Destination" 
+              className="flex-1 min-w-[145px] px-3 py-1.5 rounded-full border border-gray-300 text-[10px] outline-none placeholder:text-gray-700"
+            />
+            <input 
+              type="text" 
+              placeholder="Check-in: May 12" 
+              className="w-[115px] px-3 py-1.5 rounded-full border border-gray-300 text-[9px] outline-none placeholder:text-gray-500"
+            />
+          </div>
+          <div className="flex gap-2 mt-2">
+            <input 
+              type="text" 
+              placeholder="Check-out: May 15" 
+              className="flex-1 px-3 py-1.5 rounded-full border border-gray-300 text-[9px] outline-none placeholder:text-gray-500"
+            />
+            <button 
+              className="px-4 py-1.5 rounded-full text-white font-medium text-[10px] whitespace-nowrap"
+              style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
+            >
+              Find Hotels &gt;
+            </button>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="px-4 lg:px-6" style={{ paddingTop: contentPadding }}>
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-md mx-auto">
           {/* Featured Hotel Card */}
-          <div className="bg-white rounded-2xl lg:rounded-3xl border-2 border-blue-400 shadow-lg overflow-hidden mb-6">
-            <div className="lg:flex">
-              {/* Image */}
-              <div className="relative lg:w-2/5 lg:flex-shrink-0">
-                <img src={featuredHotel.image} alt={featuredHotel.name} className="w-full h-56 lg:h-full object-cover" />
-                <span className="absolute top-3 left-3 bg-green-500 text-white text-[10px] lg:text-xs font-bold px-3 py-1 rounded-full">
-                  {featuredHotel.badge}
-                </span>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-4">
+            {/* Image */}
+            <div className="relative">
+              <img src={featuredHotel.image} alt={featuredHotel.name} className="w-full h-48 object-cover" />
+            </div>
+
+            {/* Details */}
+            <div className="p-4">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{featuredHotel.name}</h3>
+
+              {/* Rating */}
+              <div className="flex items-center gap-1 mb-3">
+                {[1, 2, 3, 4].map(s => (
+                  <span key={s} className="text-orange-400 text-sm">★</span>
+                ))}
+                <span className="text-gray-300 text-sm">★</span>
+                <span className="font-semibold text-gray-900 text-sm ml-1">{featuredHotel.rating}</span>
               </div>
 
-              {/* Details */}
-              <div className="p-4 lg:p-6 lg:flex-1">
-                <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2">{featuredHotel.name}</h3>
-
-                {/* Rating */}
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map(s => <span key={s} className="text-orange-400">★</span>)}
-                  </div>
-                  <span className="font-semibold text-gray-900">{featuredHotel.rating}</span>
-                </div>
-
-                {/* Price */}
-                <div className="flex items-baseline gap-1 mb-4">
-                  <span className="text-2xl lg:text-3xl font-bold text-gray-900">{featuredHotel.price}</span>
-                  <span className="text-gray-500">/night</span>
-                </div>
-
-                {/* Amenities */}
-                <div className="flex flex-wrap gap-3 mb-4">
-                  {featuredHotel.amenities.map((a, i) => (
-                    <span key={i} className="text-xs lg:text-sm text-gray-600">{a}</span>
-                  ))}
-                </div>
-
-                {/* Book Button */}
-                <button
-                  className="w-full py-3 rounded-full text-white font-semibold shadow-lg"
-                  style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
-                >
-                  Book This Stay
-                </button>
+              {/* Price */}
+              <div className="flex items-baseline gap-1 mb-3">
+                <span className="text-2xl font-bold text-gray-900">{featuredHotel.price}</span>
+                <span className="text-gray-500 text-sm">/ night</span>
               </div>
+
+              {/* Amenities */}
+              <div className="space-y-2 mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">📶</span>
+                  <span className="text-xs text-gray-600">Free Wi-Fi</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">🍳</span>
+                  <span className="text-xs text-gray-600">Breakfast Included</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">✅</span>
+                  <span className="text-xs text-gray-600">Free Cancellation</span>
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="text-[11px] text-gray-500 mb-4 leading-relaxed">This hotel offers the best overall value for your stay right now.</p>
+
+              {/* Book Button */}
+              <button
+                className="w-full py-3 rounded-full text-white font-semibold shadow-lg text-sm"
+                style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
+              >
+                Book This Stay
+              </button>
             </div>
           </div>
 
           {/* Why This Hotel */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-4 lg:p-6 mb-6 shadow-sm">
-            <h4 className="text-base lg:text-lg font-bold text-gray-900 mb-3">Why This Hotel Works for You</h4>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+          <div className="bg-white rounded-2xl p-4 mb-4 shadow-sm">
+            <h4 className="text-sm font-bold text-gray-900 mb-3">Why This Hotel Works for You</h4>
+            <div className="space-y-2">
               {featuredHotel.features.map((f, i) => (
-                <div key={i} className="flex items-center gap-2 text-sm text-gray-600">
-                  <span className="text-green-500">✓</span>
-                  <span>{f}</span>
+                <div key={i} className="flex items-start gap-2">
+                  <span className="text-green-500 text-sm mt-0.5">✓</span>
+                  <span className="text-xs text-gray-600 leading-relaxed">{f}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Alternatives */}
-          <h3 className="text-sm lg:text-base font-bold text-gray-900 mb-3">Best Alternative Options near you</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <h3 className="text-sm font-bold text-gray-900 mb-3">Best Alternative Options near you</h3>
+          <div className="space-y-3">
             {alternatives.map((item) => (
-              <div key={item.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                <img src={item.image} alt={item.name} className="w-full h-32 lg:h-40 object-cover" />
-                <div className="p-4">
-                  <h4 className="font-bold text-gray-900 mb-1">{item.name}</h4>
-                  <p className="text-xs text-gray-500 mb-2">{item.category}</p>
-                  <p className="font-bold text-gray-900 mb-3">{item.price}</p>
-                  <div className="flex gap-2">
-                    <button className="flex-1 py-2 text-xs font-medium border border-blue-500 text-blue-500 rounded-full">View Details</button>
-                    <button className="flex-1 py-2 text-xs font-medium bg-orange-500 text-white rounded-full">Book Now</button>
+              <div key={item.id} className="bg-white rounded-2xl overflow-hidden shadow-sm flex">
+                {/* Image */}
+                <div className="w-28 flex-shrink-0">
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                </div>
+                
+                {/* Details */}
+                <div className="flex-1 p-3 flex flex-col justify-between">
+                  <div>
+                    <h4 className="font-bold text-gray-900 text-sm mb-1">{item.name}</h4>
+                    <p className="text-xs font-semibold text-gray-900 mb-1">{item.price}</p>
+                    <p className="text-[10px] text-gray-500">{item.category}</p>
+                  </div>
+                  
+                  <div className="flex gap-2 mt-2">
+                    <button className="flex-1 py-1.5 text-[10px] font-medium border border-blue-500 text-blue-500 rounded-full">View Details</button>
+                    <button 
+                      className="flex-1 py-1.5 text-[10px] font-medium text-white rounded-full"
+                      style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
+                    >
+                      Book This OYO
+                    </button>
                   </div>
                 </div>
               </div>
