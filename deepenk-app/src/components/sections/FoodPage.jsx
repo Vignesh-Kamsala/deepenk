@@ -19,43 +19,80 @@ const FoodPage = () => {
   ]
 
   const featuredDish = {
-    badge: 'BEST MATCH',
-    name: "Chicken Kabab's",
-    restaurant: 'Lotus Palace',
-    price: '₹299',
-    rating: '4.3',
-    platform: 'Zomato',
-    image: 'https://cdn-icons-png.flaticon.com/512/3075/3075977.png'
+    badge: 'BEST VALUE',
+    name: 'Dum Biryani',
+    description: 'Dum style, rich spices, royal taste',
+    price: '₹269',
+    originalPrice: '₹299',
+    rating: '4.8',
+    platform: 'Swiggy',
+    image: 'src/assets/food_1.png'
   }
 
   const alternatives = [
     {
       id: 1,
-      image: 'https://cdn-icons-png.flaticon.com/512/3075/3075977.png',
-      name: "Mutton Kabab's",
-      restaurant: 'Five Star',
-      price: '₹125',
-      originalPrice: '₹200',
-      rating: '4.1',
+      image: 'src/assets/food_2.png',
+      name: 'Lucknowi Biryani',
+      restaurant: 'Paradise Resto',
+      price: '₹200',
+      originalPrice: '₹300',
+      discount: '30% off',
+      rating: '4.0',
+      reviews: '5',
       platform: 'Swiggy'
     },
     {
       id: 2,
-      image: 'https://cdn-icons-png.flaticon.com/512/3075/3075977.png',
-      name: 'Chicken Biryani',
-      restaurant: '4 Seasons',
-      price: '₹149',
-      originalPrice: '₹250',
-      rating: '4.2',
-      platform: 'Zomato'
+      image: 'src/assets/food_3.png',
+      name: 'Lucknowi Biryani',
+      restaurant: 'Paradise Resto',
+      price: '₹200',
+      originalPrice: '₹400',
+      discount: '50% off',
+      rating: '4.0',
+      reviews: '5',
+      platform: 'Swiggy'
+    },
+    {
+      id: 3,
+      image: 'src/assets/food_4.png',
+      name: 'Lucknowi Biryani',
+      restaurant: 'Paradise Resto',
+      price: '₹280',
+      originalPrice: '₹400',
+      discount: '30% off',
+      rating: '4.0',
+      reviews: '5',
+      platform: 'Swiggy'
     }
   ]
 
   const insights = [
-    { title: 'AI Review Summary', content: 'Most users say this dish is rich in flavor, well-spiced, and aromatic. Meat is tender and juicy with authentic taste.' },
-    { title: 'Bundle Suggestion', content: 'Thums-up + French Fries 20% off. Coca-Cola 10% off' },
-    { title: '🎟️ Applied offers', items: ['New-user coupon DE****6 applied', 'SBI Credit Card applied', 'Delivery fee waived'] },
-    { title: 'Payment Suggestion', items: ['Paytm UPI → Get 20% cashback', 'PhonePe UPI → Scratch card rewards', 'Google Pay → Instant ₹25 off'] }
+    { 
+      title: 'AI Review Summary', 
+      content: 'Most users say biryani is rich in flavor, well-spiced, and aromatic. Rice is long-grain and fluffy, meat is tender and juicy.' 
+    },
+    { 
+      title: 'Bundle Suggestion', 
+      bundleItems: [
+        '1) Biryani + Cool Drink + Dessert → Save ₹50',
+        '2) Biryani + 1 Starter Combo → Best for 2 people'
+      ]
+    },
+    { 
+      title: 'Applied offers and Coupons', 
+      icon: '🎟️',
+      items: ['New-user coupon DE****6 applied', 'SBI Credit Card applied', 'Delivery fee waived'] 
+    },
+    { 
+      title: 'Payment Suggestion', 
+      paymentItems: [
+        { name: 'Paytm UPI', offer: 'Get 20% cashback (₹40)' },
+        { name: 'PhonePe UPI', offer: 'Scratch card rewards' },
+        { name: 'Google Pay', offer: 'Instant ₹25 off' }
+      ] 
+    }
   ]
 
   useEffect(() => {
@@ -80,7 +117,7 @@ const FoodPage = () => {
             <div className="flex-1 flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-full bg-gray-100 border border-gray-200">
               <input
                 type="text"
-                placeholder="Ask Deepenk"
+                  placeholder="Type briefly what you want to eat"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 outline-none text-sm lg:text-base bg-transparent"
@@ -123,90 +160,163 @@ const FoodPage = () => {
           {/* Best Value Label */}
           <h2 className="text-sm lg:text-base font-semibold text-gray-800 mb-3">Best Value Meal Recommendation</h2>
 
-          {/* Featured Dish Card - Desktop: Side by Side */}
-          <div className="bg-white rounded-2xl lg:rounded-3xl border-2 border-orange-400 shadow-lg overflow-hidden mb-6">
-            <div className="lg:flex">
-              {/* Left: Dish Info */}
-              <div className="p-4 lg:p-6 lg:flex-1">
-                <div className="flex gap-4">
-                  {/* Image */}
-                  <div className="w-24 h-20 lg:w-32 lg:h-28 rounded-xl border border-gray-200 overflow-hidden flex-shrink-0 bg-orange-50">
-                    <img src={featuredDish.image} alt={featuredDish.name} className="w-full h-full object-contain p-2" />
-                  </div>
+          {/* Featured Dish Card */}
+          <div className="bg-white rounded-2xl lg:rounded-3xl border border-gray-200 shadow-lg overflow-hidden mb-6">
+            {/* Zomato Header */}
+            <div className="flex items-center gap-2 px-4 pt-4">
+              <span className="text-red-500 text-lg">🔖</span>
+              <span className="text-red-500 font-bold text-sm">Zomato</span>
+            </div>
+            
+            {/* Product Section - Side by Side Layout */}
+            <div className="p-4 lg:p-6">
+              <div className="flex gap-4">
+                {/* Left: Large Product Image */}
+                <div className="w-32 h-28 lg:w-44 lg:h-40 flex-shrink-0 rounded-xl overflow-hidden">
+                  <img src={featuredDish.image} alt={featuredDish.name} className="w-full h-full object-cover" />
+                </div>
 
-                  {/* Details */}
-                  <div className="flex-1">
-                    <span className="inline-block bg-green-500 text-white text-[10px] lg:text-xs font-bold px-2 py-0.5 rounded-full mb-2">
-                      {featuredDish.badge}
+                {/* Right: Product Details */}
+                <div className="flex-1 ">
+                  {/* Badge */}
+                  <span className="inline-block bg-green-500 text-white text-[10px] lg:text-xs font-bold px-2 py-0.5 rounded-full mb-1">
+                    {featuredDish.badge}
+                  </span>
+
+                  {/* Product Name */}
+                  <h3 className="text-base lg:text-lg font-bold text-gray-900">{featuredDish.name}</h3>
+                  
+                  {/* Description */}
+                  <p className="text-[10px] lg:text-xs text-gray-400 mb-2">{featuredDish.description}</p>
+                  
+                  {/* Rating */}
+                  <div className="flex items-center gap-1 mb-2">
+                    <span className="bg-green-600 text-white text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                      {featuredDish.rating} ★
                     </span>
-                    <h3 className="text-base lg:text-xl font-bold text-gray-900 mb-1">{featuredDish.name}</h3>
-                    <p className="text-xs lg:text-sm text-gray-500 mb-2">{featuredDish.restaurant}</p>
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="text-xl lg:text-2xl font-bold text-gray-900">{featuredDish.price}</span>
-                      <span className="flex items-center gap-1 text-yellow-500 text-sm">⭐ {featuredDish.rating}</span>
-                    </div>
-                    <button
-                      className="w-full lg:w-auto px-6 py-3 rounded-full text-white font-semibold text-sm lg:text-base shadow-lg"
-                      style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
-                    >
-                      Order in {featuredDish.platform} →
-                    </button>
                   </div>
+                  
+                  {/* Price */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xl lg:text-2xl font-bold text-gray-900">{featuredDish.price}</span>
+                    <span className="text-sm text-gray-400 line-through">{featuredDish.originalPrice}</span>
+                  </div>
+                  
+                  {/* Order Button */}
+                  <button
+                    className="px-4 py-2 rounded-full text-white font-semibold text-xs shadow-md"
+                    style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
+                  >
+                    Order in {featuredDish.platform}
+                  </button>
                 </div>
               </div>
+            </div>
 
-              {/* Right: Deepenk Insights */}
-              <div className="border-t lg:border-t-0 lg:border-l border-gray-200 p-4 lg:p-6 lg:w-[400px] bg-gradient-to-b from-orange-50 to-white lg:bg-white">
-                <h4 className="text-sm lg:text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-                  <span className="text-orange-500">💡</span> DEEPENK INSIGHTS
-                </h4>
-                <div className="space-y-3">
-                  {insights.map((insight, idx) => (
-                    <div key={idx}>
-                      <p className="text-xs lg:text-sm font-semibold text-gray-800 mb-1">{insight.title}</p>
-                      {insight.content && (
-                        <p className="text-xs lg:text-sm text-gray-600">{insight.content}</p>
-                      )}
-                      {insight.items && (
-                        <ul className="text-xs lg:text-sm text-gray-600 space-y-0.5">
-                          {insight.items.map((item, i) => (
-                            <li key={i} className="flex items-start gap-1">
-                              <span className="text-green-500">•</span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
-                </div>
+            {/* Deepenk Insights Section */}
+            <div className="border-t border-gray-200 p-4 lg:p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-sm lg:text-base font-bold text-gray-900 tracking-wide">DEEPENK INSIGHTS</h4>
+                <button className="text-gray-400 hover:text-gray-600">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="5" r="2"/>
+                    <circle cx="12" cy="12" r="2"/>
+                    <circle cx="12" cy="19" r="2"/>
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                {insights.map((insight, idx) => (
+                  <div key={idx}>
+                    {/* Title with icon for Applied offers */}
+                    <p className="text-xs lg:text-sm font-bold text-gray-900 mb-1 flex items-center gap-2">
+                      {insight.icon && <span>{insight.icon}</span>}
+                      {insight.title}
+                    </p>
+                    
+                    {/* Content text */}
+                    {insight.content && (
+                      <p className="text-[10px] lg:text-xs text-gray-500 leading-relaxed">{insight.content}</p>
+                    )}
+                    
+                    {/* Bundle items */}
+                    {insight.bundleItems && (
+                      <div className="text-[10px] lg:text-xs text-gray-500 space-y-0.5">
+                        {insight.bundleItems.map((item, i) => (
+                          <p key={i}>{item}</p>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Bullet items for Applied offers */}
+                    {insight.items && (
+                      <ul className="text-[10px] lg:text-xs text-gray-600 space-y-1 mt-1">
+                        {insight.items.map((item, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-gray-800 mt-0.5">●</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    
+                    {/* Payment items with arrows */}
+                    {insight.paymentItems && (
+                      <div className="text-[10px] lg:text-xs text-gray-600 space-y-0.5">
+                        {insight.paymentItems.map((item, i) => (
+                          <p key={i}>
+                            <span className="text-gray-800">{item.name}</span>
+                            <span className="text-gray-400"> → </span>
+                            <span className="text-gray-600">{item.offer}</span>
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
           {/* Best Alternatives */}
-          <h3 className="text-sm lg:text-base font-bold text-gray-900 mb-3">Best Alternative Options near you</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <h3 className="text-xs lg:text-sm font-bold text-gray-900 mb-3">Best Alternative Options near you</h3>
+          <div className="flex flex-col gap-3">
             {alternatives.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow"
+                className="bg-white rounded-xl border border-gray-200 p-3 shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="flex gap-4">
-                  <div className="w-20 h-16 lg:w-24 lg:h-20 rounded-xl border border-gray-200 overflow-hidden flex-shrink-0 bg-orange-50">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-contain p-2" />
+                <div className="flex gap-3">
+                  <div className="w-20 h-16 lg:w-24 lg:h-20 rounded-lg overflow-hidden flex-shrink-0">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-gray-900 mb-1">{item.name}</h4>
-                    <p className="text-xs text-gray-500 mb-2">{item.restaurant}</p>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-bold text-gray-900">{item.price}</span>
-                      <span className="text-xs text-gray-400 line-through">{item.originalPrice}</span>
-                      <span className="text-xs text-yellow-500">⭐ {item.rating}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-bold text-gray-900 text-sm">{item.name}</h4>
+                        <p className="text-[10px] text-gray-400">{item.restaurant}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-gray-900 text-sm">{item.price}</p>
+                        <p className="text-[10px] text-gray-400 line-through">{item.originalPrice}</p>
+                        <p className="text-[10px] text-green-600 font-medium">{item.discount}</p>
+                      </div>
                     </div>
-                    <button className="px-4 py-2 bg-orange-500 text-white text-xs font-semibold rounded-full">
-                      Order in {item.platform}
-                    </button>
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-center gap-1">
+                        <span className="bg-green-600 text-white text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                          {item.rating} ★
+                        </span>
+                        <span className="text-[10px] text-gray-400">/ {item.reviews}</span>
+                      </div>
+                      <button 
+                        className="px-3 py-1.5 text-white text-[10px] font-semibold rounded-full"
+                        style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
+                      >
+                        Order in {item.platform}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -214,13 +324,11 @@ const FoodPage = () => {
           </div>
 
           {/* Footer */}
-          <div className="mt-8 text-center">
-            <p className="text-[10px] lg:text-xs text-gray-500">
-              Note: This is a trial version. Your feedback will help us improve.
+          <div className="mt-6 text-center">
+            <p className="text-[9px] lg:text-[10px] text-gray-400 leading-relaxed">
+              Note: This is a trial version, so results may be limited, optimized and not real data and<br/>
+              Your feedback will help us improve the final product with better features.
             </p>
-            <button className="mt-2 px-6 py-2 text-xs font-medium border border-gray-300 rounded-full hover:bg-gray-50">
-              Feedback
-            </button>
           </div>
         </div>
       </div>

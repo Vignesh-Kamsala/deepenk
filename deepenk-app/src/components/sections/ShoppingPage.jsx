@@ -26,37 +26,82 @@ const ShoppingPage = () => {
     price: '₹129999',
     rating: '4.5',
     platform: 'Amazon',
-    image: 'https://cdn-icons-png.flaticon.com/512/2721/2721269.png'
+    image: 'src/assets/shopping_image_1.png'
   }
 
   const alternatives = [
     {
       id: 1,
-      image: 'https://cdn-icons-png.flaticon.com/512/2721/2721269.png',
-      name: 'HP victus 3',
-      seller: 'Reliance',
-      price: '₹60000',
-      originalPrice: '₹85000',
-      rating: '4.1',
+      image: 'src/assets/shopping_2.png',
+      name: 'ASUS Vivobook 15',
+      specs: '(16 GB/512 G SSD/Windows 11 Home)',
+      rating: '4.5',
+      features: [
+        'Intel Core i7 Processor (13th Gen)',
+        '16 GB DDR4 RAM',
+        'Windows 11 Operating System'
+      ],
+      price: '₹40,190',
+      originalPrice: '₹54,990',
+      discount: '28% off',
       platform: 'Flipkart'
     },
     {
       id: 2,
-      image: 'https://cdn-icons-png.flaticon.com/512/2721/2721269.png',
-      name: 'Dell Inspiron 15',
-      seller: 'Croma',
-      price: '₹55000',
-      originalPrice: '₹75000',
-      rating: '4.2',
-      platform: 'Amazon'
+      image: 'src/assets/shopping_3.png',
+      name: 'Samsung Galaxy Book4',
+      specs: '(8 GB/512 GB SSD/Windows 11 Home)',
+      rating: '4.3',
+      features: [
+        'Intel Core i5 Processor (13th Gen)',
+        '8 GB DDR4 RAM',
+        'Windows 11 Operating System'
+      ],
+      price: '₹40,190',
+      originalPrice: '₹54,990',
+      discount: '28% off',
+      platform: 'Flipkart'
+    },
+    {
+      id: 3,
+      image: 'src/assets/shopping_4.png',
+      name: 'ASUS Vivobook S16 OLED',
+      specs: '(16 GB/512 GB SSD/Windows 11 Home)',
+      rating: '4.6',
+      features: [
+        'Qualcomm Snapdragon 8',
+        '16 GB DDR4 RAM',
+        'Windows 11 Operating System'
+      ],
+      price: '₹40,190',
+      originalPrice: '₹54,990',
+      discount: '28% off',
+      platform: 'Flipkart'
     }
   ]
 
   const insights = [
-    { title: 'AI Review Summary', content: 'Apple M3 Pro is a powerful and efficient chip designed for professionals. It delivers high performance for tasks like video editing, coding, and design.' },
-    { title: 'Bundle Suggestion', content: 'Apple Magic Keyboard with Touch ID & Numeric Keypad. Screen + Keyboard Protector Set – 20% discount' },
-    { title: '🎟️ Applied offers', items: ['New-user coupon DE****6 applied', 'SBI Credit Card applied', 'Delivery fee waived'] },
-    { title: 'Payment Suggestion', items: ['Paytm UPI → Get 20% cashback (₹40)', 'PhonePe UPI → Scratch card rewards', 'Google Pay → Instant ₹25 off'] }
+    { 
+      title: 'AI Review Summary', 
+      content: 'Apple M3 Pro is a powerful and efficient chip designed for professionals. It delivers high performance for tasks like video editing, coding, and design, with advanced graphics, fast processing, and excellent battery efficiency, making it ideal for demanding workflows.' 
+    },
+    { 
+      title: 'Bundle Suggestion', 
+      content: 'Apple Magic Keyboard with Touch ID & Numeric Keypad Screen + Keyboard Protector Set – Keeps display – discount 20%' 
+    },
+    { 
+      title: 'Applied offers and Coupons', 
+      icon: '🎟️',
+      items: ['New-user coupon DE****6 applied', 'SBI Credit Card applied', 'Delivery fee waived'] 
+    },
+    { 
+      title: 'Payment Suggestion', 
+      paymentItems: [
+        { name: 'Paytm UPI', offer: 'Get 20% cashback (₹40)' },
+        { name: 'PhonePe UPI', offer: 'Scratch card rewards' },
+        { name: 'Google Pay', offer: 'Instant ₹25 off' }
+      ] 
+    }
   ]
 
   useEffect(() => {
@@ -81,7 +126,7 @@ const ShoppingPage = () => {
             <div className="flex-1 flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-full bg-gray-100 border border-gray-200">
               <input
                 type="text"
-                placeholder="Ask Deepenk"
+                placeholder="Type brifely what you want"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 outline-none text-sm lg:text-base bg-transparent"
@@ -124,90 +169,160 @@ const ShoppingPage = () => {
           {/* Best Value Label */}
           <h2 className="text-sm lg:text-base font-semibold text-gray-800 mb-3">Best Value Recommendation</h2>
 
-          {/* Featured Product Card - Desktop: Side by Side */}
-          <div className="bg-white rounded-2xl lg:rounded-3xl border-2 border-yellow-400 shadow-lg overflow-hidden mb-6">
-            <div className="lg:flex">
-              {/* Left: Product Info */}
-              <div className="p-4 lg:p-6 lg:flex-1">
-                <div className="flex gap-4">
-                  {/* Image */}
-                  <div className="w-24 h-20 lg:w-32 lg:h-28 rounded-xl border border-gray-200 overflow-hidden flex-shrink-0">
-                    <img src={featuredProduct.image} alt={featuredProduct.name} className="w-full h-full object-contain p-2" />
-                  </div>
+          {/* Featured Product Card */}
+          <div className="bg-white rounded-2xl lg:rounded-3xl border border-gray-200 shadow-lg overflow-hidden mb-6">
+            {/* Product Section - Side by Side Layout */}
+            <div className="p-6 lg:p-8">
+              <div className="flex gap-6">
+                {/* Left: Large Product Image */}
+                <div className="w-40 h-36 lg:w-56 lg:h-48 flex-shrink-0">
+                  <img src={featuredProduct.image} alt={featuredProduct.name} className="w-full h-full object-contain" />
+                </div>
 
-                  {/* Details */}
-                  <div className="flex-1">
-                    <span className="inline-block bg-green-500 text-white text-[10px] lg:text-xs font-bold px-2 py-0.5 rounded-full mb-2">
-                      {featuredProduct.badge}
-                    </span>
-                    <h3 className="text-base lg:text-xl font-bold text-gray-900 mb-1">{featuredProduct.name}</h3>
-                    <p className="text-xs lg:text-sm text-gray-500 mb-2">{featuredProduct.seller}</p>
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="text-xl lg:text-2xl font-bold text-gray-900">{featuredProduct.price}</span>
-                      <span className="flex items-center gap-1 text-yellow-500 text-sm">⭐ {featuredProduct.rating}</span>
-                    </div>
-                    <button
-                      className="w-full lg:w-auto px-6 py-3 rounded-full text-white font-semibold text-sm lg:text-base shadow-lg"
-                      style={{ background: 'linear-gradient(90deg, #FF9900 0%, #FF6F00 100%)' }}
-                    >
-                      Order in {featuredProduct.platform} →
-                    </button>
+                {/* Right: Product Details */}
+                <div className="flex-1">
+                  {/* Badge */}
+                  <span className="inline-block bg-green-500 text-white text-[10px] lg:text-xs font-bold px-3 py-1 rounded-full mb-2">
+                    {featuredProduct.badge}
+                  </span>
+
+                  {/* Product Name */}
+                  <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-1">{featuredProduct.name}</h3>
+                  
+                  {/* Seller */}
+                  <p className="text-xs lg:text-sm text-gray-400 mb-2">{featuredProduct.seller}</p>
+                  
+                  {/* Price */}
+                  <p className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{featuredProduct.price}</p>
+                  
+                  {/* Rating */}
+                  <div className="flex items-center gap-1 mb-4">
+                    <span className="text-yellow-400 text-lg">★</span>
+                    <span className="text-gray-700 font-medium">{featuredProduct.rating}</span>
                   </div>
+                  
+                  {/* Order Button */}
+                  <button
+                    className="px-6 py-2.5 rounded-full text-white font-semibold text-sm shadow-lg"
+                    style={{ background: 'linear-gradient(90deg, #FF9900 0%, #FF6F00 100%)' }}
+                  >
+                    Order in {featuredProduct.platform}
+                  </button>
                 </div>
               </div>
+            </div>
 
-              {/* Right: Deepenk Insights */}
-              <div className="border-t lg:border-t-0 lg:border-l border-gray-200 p-4 lg:p-6 lg:w-[400px] bg-gradient-to-b from-green-50 to-white lg:bg-white">
-                <h4 className="text-sm lg:text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-                  <span className="text-orange-500">💡</span> DEEPENK INSIGHTS
-                </h4>
-                <div className="space-y-3">
-                  {insights.map((insight, idx) => (
-                    <div key={idx}>
-                      <p className="text-xs lg:text-sm font-semibold text-gray-800 mb-1">{insight.title}</p>
-                      {insight.content && (
-                        <p className="text-xs lg:text-sm text-gray-600">{insight.content}</p>
-                      )}
-                      {insight.items && (
-                        <ul className="text-xs lg:text-sm text-gray-600 space-y-0.5">
-                          {insight.items.map((item, i) => (
-                            <li key={i} className="flex items-start gap-1">
-                              <span className="text-green-500">•</span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
-                </div>
+            {/* Deepenk Insights Section */}
+            <div className="border-t border-gray-200 p-6 lg:p-8">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-base lg:text-lg font-bold text-gray-900 tracking-wide">DEEPENK INSIGHTS</h4>
+                <button className="text-gray-400 hover:text-gray-600">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="5" r="2"/>
+                    <circle cx="12" cy="12" r="2"/>
+                    <circle cx="12" cy="19" r="2"/>
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="space-y-5">
+                {insights.map((insight, idx) => (
+                  <div key={idx}>
+                    {/* Title with icon for Applied offers */}
+                    <p className="text-sm font-bold text-gray-900 mb-1.5 flex items-center gap-2">
+                      {insight.icon && <span>{insight.icon}</span>}
+                      {insight.title}
+                    </p>
+                    
+                    {/* Content text */}
+                    {insight.content && (
+                      <p className="text-xs lg:text-sm text-gray-500 leading-relaxed">{insight.content}</p>
+                    )}
+                    
+                    {/* Bullet items for Applied offers */}
+                    {insight.items && (
+                      <ul className="text-xs lg:text-sm text-gray-600 space-y-1 mt-1">
+                        {insight.items.map((item, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-orange-500 mt-0.5">●</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    
+                    {/* Payment items with arrows */}
+                    {insight.paymentItems && (
+                      <div className="text-xs lg:text-sm text-gray-600 space-y-1 mt-1">
+                        {insight.paymentItems.map((item, i) => (
+                          <p key={i}>
+                            <span className="text-gray-800">{item.name}</span>
+                            <span className="text-gray-400"> → </span>
+                            <span className="text-gray-600">{item.offer}</span>
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
           {/* Best Alternatives */}
-          <h3 className="text-sm lg:text-base font-bold text-gray-900 mb-3">Best Alternative Options</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <h3 className="text-sm lg:text-base font-bold text-gray-900 mb-3">Best Alternative Options near you</h3>
+          <div className="flex flex-col gap-4">
             {alternatives.map((item) => (
               <div
                 key={item.id}
                 className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex gap-4">
-                  <div className="w-20 h-16 lg:w-24 lg:h-20 rounded-xl border border-gray-200 overflow-hidden flex-shrink-0">
+                  {/* Product Image */}
+                  <div className="w-24 h-24 lg:w-28 lg:h-28 rounded-xl border border-gray-200 overflow-hidden flex-shrink-0 bg-gray-50">
                     <img src={item.image} alt={item.name} className="w-full h-full object-contain p-2" />
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-gray-900 mb-1">{item.name}</h4>
-                    <p className="text-xs text-gray-500 mb-2">{item.seller}</p>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-bold text-gray-900">{item.price}</span>
-                      <span className="text-xs text-gray-400 line-through">{item.originalPrice}</span>
-                      <span className="text-xs text-yellow-500">⭐ {item.rating}</span>
+
+                  {/* Product Details */}
+                  <div className="flex-1 min-w-0 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-start justify-between gap-2 mb-3">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-bold text-gray-900 text-sm lg:text-base">{item.name}</h4>
+                          <p className="text-[10px] lg:text-xs text-gray-500 mb-1">{item.specs}</p>
+                          <span className="inline-block bg-yellow-400 text-black text-[10px] font-bold px-1.5 py-0.5 rounded mb-2">
+                            {item.rating} ★
+                          </span>
+                        </div>
+
+                        {/* Price Section */}
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-lg lg:text-xl font-bold text-gray-900">{item.price}</p>
+                          <p className="text-[10px] lg:text-xs text-gray-400 line-through">{item.originalPrice}</p>
+                          <p className="text-[10px] lg:text-xs text-green-600 font-semibold">{item.discount}</p>
+                        </div>
+                      </div>
+
+                      {/* Features List */}
+                      <ul className="text-[10px] lg:text-xs text-gray-600 space-y-0.5">
+                        {item.features.map((feature, idx) => (
+                          <li key={idx} className="flex items-start gap-1">
+                            <span className="text-gray-400">•</span>
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <button className="px-4 py-2 bg-orange-500 text-white text-xs font-semibold rounded-full">
-                      Order in {item.platform}
-                    </button>
+
+                    {/* Order Button */}
+                    <div className="flex justify-end mt-3">
+                      <button
+                        className="px-4 py-2 text-white text-xs font-semibold rounded-full shadow-md"
+                        style={{ background: 'linear-gradient(90deg, #FF9900 0%, #FF6F00 100%)' }}
+                      >
+                        Order in {item.platform}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
