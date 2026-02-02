@@ -58,7 +58,7 @@ const RidesPage = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-white lg:ml-[220px]">
+    <div className="bg-white pb-8">
       <div className="px-4 lg:px-8 pt-16 lg:pt-8 pb-6 max-w-5xl mx-auto">
         {/* Transport Type Buttons - Figma-style pills */}
         <div className="flex items-center justify-center gap-4 mb-4" style={{ padding: '8px 12px' }}>

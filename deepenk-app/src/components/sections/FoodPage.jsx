@@ -130,7 +130,6 @@ const FoodPage = () => {
               </button>
             </div>
           </div>
-
           {/* Categories */}
           <div className="flex gap-3 lg:gap-4 overflow-x-auto pb-2 scrollbar-hide lg:justify-center">
             {categories.map((cat) => (
@@ -156,131 +155,170 @@ const FoodPage = () => {
 
       {/* Main Content */}
       <div className="px-4 lg:px-6" style={{ paddingTop: contentPadding }}>
-        <div className="max-w-5xl mx-auto">
-          {/* Best Value Label */}
-          <h2 className="text-sm lg:text-base font-semibold text-gray-800 mb-3">Best Value Meal Recommendation</h2>
+        <div className="max-w-6xl mx-auto">
+          {/* Desktop: Side by Side Layout */}
+          <div className="lg:grid lg:grid-cols-[1fr_1.2fr] lg:gap-6 lg:items-start">
+            {/* Left Column: Featured Dish */}
+            <div>
+              {/* Best Value Label */}
+              <h2 className="text-sm lg:text-base font-semibold text-gray-800 mb-3">Best Value Meal Recommendation</h2>
 
-          {/* Featured Dish Card */}
-          <div className="bg-white rounded-2xl lg:rounded-3xl border border-gray-200 shadow-lg overflow-hidden mb-6">
-            {/* Zomato Header */}
-            <div className="flex items-center gap-2 px-4 pt-4">
-              <span className="text-red-500 text-lg">🔖</span>
-              <span className="text-red-500 font-bold text-sm">Zomato</span>
-            </div>
-            
-            {/* Product Section - Side by Side Layout */}
-            <div className="p-4 lg:p-6">
-              <div className="flex gap-4">
-                {/* Left: Large Product Image */}
-                <div className="w-32 h-28 lg:w-44 lg:h-40 flex-shrink-0 rounded-xl overflow-hidden">
-                  <img src={featuredDish.image} alt={featuredDish.name} className="w-full h-full object-cover" />
+              {/* Featured Dish Card */}
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden mb-6 lg:mb-0">
+                {/* Zomato Header */}
+                <div className="flex items-center gap-2 px-4 pt-3">
+                  <span className="text-red-500 text-base">🔖</span>
+                  <span className="text-red-500 font-bold text-xs">Zomato</span>
                 </div>
-
-                {/* Right: Product Details */}
-                <div className="flex-1 ">
-                  {/* Badge */}
-                  <span className="inline-block bg-green-500 text-white text-[10px] lg:text-xs font-bold px-2 py-0.5 rounded-full mb-1">
-                    {featuredDish.badge}
-                  </span>
-
-                  {/* Product Name */}
-                  <h3 className="text-base lg:text-lg font-bold text-gray-900">{featuredDish.name}</h3>
-                  
-                  {/* Description */}
-                  <p className="text-[10px] lg:text-xs text-gray-400 mb-2">{featuredDish.description}</p>
-                  
-                  {/* Rating */}
-                  <div className="flex items-center gap-1 mb-2">
-                    <span className="bg-green-600 text-white text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                      {featuredDish.rating} ★
-                    </span>
+                
+                {/* Product Section */}
+                <div className="p-4 lg:p-6">
+                  {/* Mobile: Vertical centered layout */}
+                  <div className="flex flex-col lg:hidden">
+                    <div className="w-full aspect-square rounded-full overflow-hidden mb-4">
+                      <img src={featuredDish.image} alt={featuredDish.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="text-center">
+                      <span className="inline-block bg-green-500 text-white text-[9px] font-bold px-2 py-0.5 rounded mb-2">
+                        {featuredDish.badge}
+                      </span>
+                      <h3 className="text-base font-bold text-gray-900 mb-2">{featuredDish.name}</h3>
+                      <p className="text-xs text-gray-500 mb-3">{featuredDish.description}</p>
+                      <div className="flex items-center justify-center gap-1 mb-3">
+                        <span className="bg-green-600 text-white text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                          {featuredDish.rating} ★
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-center gap-2 mb-4">
+                        <span className="text-xl font-bold text-gray-900">{featuredDish.price}</span>
+                        <span className="text-sm text-gray-400 line-through">{featuredDish.originalPrice}</span>
+                      </div>
+                      <button
+                        className="w-full py-2.5 rounded-full text-white font-semibold text-sm shadow-md"
+                        style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
+                      >
+                        Order in {featuredDish.platform}
+                      </button>
+                    </div>
                   </div>
-                  
-                  {/* Price */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xl lg:text-2xl font-bold text-gray-900">{featuredDish.price}</span>
-                    <span className="text-sm text-gray-400 line-through">{featuredDish.originalPrice}</span>
+
+                  {/* Desktop: Centered image on top, text left + button right below */}
+                  <div className="hidden lg:block">
+                    {/* Centered Image */}
+                    <div className="w-[240px] h-[240px] rounded-full overflow-hidden mx-auto mb-4">
+                      <img src={featuredDish.image} alt={featuredDish.name} className="w-full h-full object-cover" />
+                    </div>
+
+                    {/* Text left + Button right */}
+                    <div className="flex gap-4 items-end">
+                      {/* Text details - Left side */}
+                      <div className="flex-1 text-left">
+                        <span className="inline-block bg-green-500 text-white text-[9px] font-bold px-2 py-0.5 rounded mb-2">
+                          {featuredDish.badge}
+                        </span>
+                        <h3 className="text-lg font-bold text-gray-900 mb-2">{featuredDish.name}</h3>
+                        <p className="text-sm text-gray-500 mb-3">{featuredDish.description}</p>
+                        <div className="flex items-center gap-1 mb-3">
+                          <span className="bg-green-600 text-white text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                            {featuredDish.rating} ★
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl font-bold text-gray-900">{featuredDish.price}</span>
+                          <span className="text-sm text-gray-400 line-through">{featuredDish.originalPrice}</span>
+                        </div>
+                      </div>
+
+                      {/* Button - Right side */}
+                      <div className="flex-shrink-0">
+                        <button
+                          className="px-6 py-3 rounded-full text-white font-semibold text-sm shadow-md whitespace-nowrap"
+                          style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
+                        >
+                          Order in {featuredDish.platform}
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  
-                  {/* Order Button */}
-                  <button
-                    className="px-4 py-2 rounded-full text-white font-semibold text-xs shadow-md"
-                    style={{ background: 'linear-gradient(90deg, #FF6F00 0%, #FF9900 100%)' }}
-                  >
-                    Order in {featuredDish.platform}
-                  </button>
                 </div>
               </div>
             </div>
 
-            {/* Deepenk Insights Section */}
-            <div className="border-t border-gray-200 p-4 lg:p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-sm lg:text-base font-bold text-gray-900 tracking-wide">DEEPENK INSIGHTS</h4>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="5" r="2"/>
-                    <circle cx="12" cy="12" r="2"/>
-                    <circle cx="12" cy="19" r="2"/>
-                  </svg>
-                </button>
-              </div>
-              
-              <div className="space-y-4">
-                {insights.map((insight, idx) => (
-                  <div key={idx}>
-                    {/* Title with icon for Applied offers */}
-                    <p className="text-xs lg:text-sm font-bold text-gray-900 mb-1 flex items-center gap-2">
-                      {insight.icon && <span>{insight.icon}</span>}
-                      {insight.title}
-                    </p>
-                    
-                    {/* Content text */}
-                    {insight.content && (
-                      <p className="text-[10px] lg:text-xs text-gray-500 leading-relaxed">{insight.content}</p>
-                    )}
-                    
-                    {/* Bundle items */}
-                    {insight.bundleItems && (
-                      <div className="text-[10px] lg:text-xs text-gray-500 space-y-0.5">
-                        {insight.bundleItems.map((item, i) => (
-                          <p key={i}>{item}</p>
-                        ))}
-                      </div>
-                    )}
-                    
-                    {/* Bullet items for Applied offers */}
-                    {insight.items && (
-                      <ul className="text-[10px] lg:text-xs text-gray-600 space-y-1 mt-1">
-                        {insight.items.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <span className="text-gray-800 mt-0.5">●</span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    
-                    {/* Payment items with arrows */}
-                    {insight.paymentItems && (
-                      <div className="text-[10px] lg:text-xs text-gray-600 space-y-0.5">
-                        {insight.paymentItems.map((item, i) => (
-                          <p key={i}>
-                            <span className="text-gray-800">{item.name}</span>
-                            <span className="text-gray-400"> → </span>
-                            <span className="text-gray-600">{item.offer}</span>
-                          </p>
-                        ))}
-                      </div>
-                    )}
+            {/* Right Column: Insights */}
+            <div>
+              {/* Invisible heading to match left column alignment */}
+              <h2 className="text-sm lg:text-base font-semibold text-gray-800 mb-3">&nbsp;</h2>
+              {/* Deepenk Insights Section */}
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden mb-6">
+                <div className="p-4 lg:p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-sm font-bold text-gray-900 tracking-wide">DEEPENK INSIGHTS</h4>
+                    <button className="text-gray-400 hover:text-gray-600">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="5" r="2"/>
+                        <circle cx="12" cy="12" r="2"/>
+                        <circle cx="12" cy="19" r="2"/>
+                      </svg>
+                    </button>
                   </div>
-                ))}
+                  
+                  <div className="space-y-6 lg:space-y-8">
+                    {insights.map((insight, idx) => (
+                      <div key={idx}>
+                        {/* Title with icon for Applied offers */}
+                        <p className="text-sm lg:text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
+                          {insight.icon && <span>{insight.icon}</span>}
+                          {insight.title}
+                        </p>
+                        
+                        {/* Content text */}
+                        {insight.content && (
+                          <p className="text-xs lg:text-sm text-gray-500 leading-relaxed">{insight.content}</p>
+                        )}
+                        
+                        {/* Bundle items */}
+                        {insight.bundleItems && (
+                          <div className="text-xs lg:text-sm text-gray-500 space-y-2">
+                            {insight.bundleItems.map((item, i) => (
+                              <p key={i}>{item}</p>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {/* Bullet items for Applied offers */}
+                        {insight.items && (
+                          <ul className="text-xs lg:text-sm text-gray-600 space-y-2 mt-2">
+                            {insight.items.map((item, i) => (
+                              <li key={i} className="flex items-start gap-2">
+                                <span className="text-gray-800 mt-0.5">●</span>
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        
+                        {/* Payment items with arrows */}
+                        {insight.paymentItems && (
+                          <div className="text-xs lg:text-sm text-gray-600 space-y-1.5">
+                            {insight.paymentItems.map((item, i) => (
+                              <p key={i}>
+                                <span className="text-gray-800">{item.name}</span>
+                                <span className="text-gray-400"> → </span>
+                                <span className="text-gray-600">{item.offer}</span>
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Best Alternatives */}
-          <h3 className="text-xs lg:text-sm font-bold text-gray-900 mb-3">Best Alternative Options near you</h3>
+          <h3 className="text-xs lg:text-sm font-bold text-gray-900 mb-3 mt-6">Best Alternative Options near you</h3>
           <div className="flex flex-col gap-3">
             {alternatives.map((item) => (
               <div

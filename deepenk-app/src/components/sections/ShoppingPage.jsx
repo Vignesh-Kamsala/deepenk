@@ -114,7 +114,7 @@ const ShoppingPage = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50 lg:bg-white pb-8">
+    <div className="bg-gray-50 lg:bg-white pb-8">
       {/* Header - Fixed */}
       <div ref={headerRef} className="fixed top-14 lg:top-0 left-0 lg:left-[220px] right-0 bg-white z-40 px-4 lg:px-6 pt-3 lg:pt-5 pb-3 border-b border-gray-200">
         {/* Search Bar */}
@@ -165,45 +165,41 @@ const ShoppingPage = () => {
 
       {/* Main Content */}
       <div className="px-4 lg:px-6" style={{ paddingTop: contentPadding }}>
-        <div className="max-w-5xl mx-auto">
-          {/* Best Value Label */}
-          <h2 className="text-sm lg:text-base font-semibold text-gray-800 mb-3">Best Value Recommendation</h2>
+        <div className="max-w-6xl mx-auto">
+          {/* Mobile: Stacked Layout */}
+          <div className="lg:hidden">
+            {/* Best Value Label */}
+            <h2 className="text-sm font-semibold text-gray-800 mb-3">Best Value Recommendation</h2>
 
-          {/* Featured Product Card */}
-          <div className="bg-white rounded-2xl lg:rounded-3xl border border-gray-200 shadow-lg overflow-hidden mb-6">
-            {/* Product Section - Side by Side Layout */}
-            <div className="p-6 lg:p-8">
-              <div className="flex gap-6">
-                {/* Left: Large Product Image */}
-                <div className="w-40 h-36 lg:w-56 lg:h-48 flex-shrink-0">
+            {/* Featured Product Card */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden mb-6">
+              {/* Amazon Header */}
+              <div className="flex items-center gap-2 px-4 pt-3">
+                <span className="text-orange-500 text-base">🔖</span>
+                <span className="text-orange-500 font-bold text-xs">Amazon</span>
+              </div>
+              
+              {/* Product Section */}
+              <div className="p-4">
+                <div className="w-full aspect-square overflow-hidden mb-4 flex items-center justify-center">
                   <img src={featuredProduct.image} alt={featuredProduct.name} className="w-full h-full object-contain" />
                 </div>
-
-                {/* Right: Product Details */}
-                <div className="flex-1">
-                  {/* Badge */}
-                  <span className="inline-block bg-green-500 text-white text-[10px] lg:text-xs font-bold px-3 py-1 rounded-full mb-2">
+                <div className="text-center">
+                  <span className="inline-block bg-green-500 text-white text-[9px] font-bold px-2 py-0.5 rounded mb-2">
                     {featuredProduct.badge}
                   </span>
-
-                  {/* Product Name */}
-                  <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-1">{featuredProduct.name}</h3>
-                  
-                  {/* Seller */}
-                  <p className="text-xs lg:text-sm text-gray-400 mb-2">{featuredProduct.seller}</p>
-                  
-                  {/* Price */}
-                  <p className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{featuredProduct.price}</p>
-                  
-                  {/* Rating */}
-                  <div className="flex items-center gap-1 mb-4">
-                    <span className="text-yellow-400 text-lg">★</span>
-                    <span className="text-gray-700 font-medium">{featuredProduct.rating}</span>
+                  <h3 className="text-base font-bold text-gray-900 mb-2">{featuredProduct.name}</h3>
+                  <p className="text-xs text-gray-500 mb-3">{featuredProduct.seller}</p>
+                  <div className="flex items-center justify-center gap-1 mb-3">
+                    <span className="bg-yellow-400 text-black text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                      {featuredProduct.rating} ★
+                    </span>
                   </div>
-                  
-                  {/* Order Button */}
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <span className="text-xl font-bold text-gray-900">{featuredProduct.price}</span>
+                  </div>
                   <button
-                    className="px-6 py-2.5 rounded-full text-white font-semibold text-sm shadow-lg"
+                    className="w-full py-2.5 rounded-full text-white font-semibold text-sm shadow-md"
                     style={{ background: 'linear-gradient(90deg, #FF9900 0%, #FF6F00 100%)' }}
                   >
                     Order in {featuredProduct.platform}
@@ -213,58 +209,171 @@ const ShoppingPage = () => {
             </div>
 
             {/* Deepenk Insights Section */}
-            <div className="border-t border-gray-200 p-6 lg:p-8">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-base lg:text-lg font-bold text-gray-900 tracking-wide">DEEPENK INSIGHTS</h4>
-                <button className="text-gray-400 hover:text-gray-600">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="5" r="2"/>
-                    <circle cx="12" cy="12" r="2"/>
-                    <circle cx="12" cy="19" r="2"/>
-                  </svg>
-                </button>
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden mb-6">
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-sm font-bold text-gray-900 tracking-wide">DEEPENK INSIGHTS</h4>
+                  <button className="text-gray-400 hover:text-gray-600">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <circle cx="12" cy="5" r="2"/>
+                      <circle cx="12" cy="12" r="2"/>
+                      <circle cx="12" cy="19" r="2"/>
+                    </svg>
+                  </button>
+                </div>
+                
+                <div className="space-y-6">
+                  {insights.map((insight, idx) => (
+                    <div key={idx}>
+                      <p className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        {insight.icon && <span>{insight.icon}</span>}
+                        {insight.title}
+                      </p>
+                      
+                      {insight.content && (
+                        <p className="text-xs text-gray-500 leading-relaxed">{insight.content}</p>
+                      )}
+                      
+                      {insight.items && (
+                        <ul className="text-xs text-gray-600 space-y-2 mt-2">
+                          {insight.items.map((item, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <span className="text-gray-800 mt-0.5">●</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      
+                      {insight.paymentItems && (
+                        <div className="text-xs text-gray-600 space-y-1.5">
+                          {insight.paymentItems.map((item, i) => (
+                            <p key={i}>
+                              <span className="text-gray-800">{item.name}</span>
+                              <span className="text-gray-400"> → </span>
+                              <span className="text-gray-600">{item.offer}</span>
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
-              
-              <div className="space-y-5">
-                {insights.map((insight, idx) => (
-                  <div key={idx}>
-                    {/* Title with icon for Applied offers */}
-                    <p className="text-sm font-bold text-gray-900 mb-1.5 flex items-center gap-2">
-                      {insight.icon && <span>{insight.icon}</span>}
-                      {insight.title}
-                    </p>
-                    
-                    {/* Content text */}
-                    {insight.content && (
-                      <p className="text-xs lg:text-sm text-gray-500 leading-relaxed">{insight.content}</p>
-                    )}
-                    
-                    {/* Bullet items for Applied offers */}
-                    {insight.items && (
-                      <ul className="text-xs lg:text-sm text-gray-600 space-y-1 mt-1">
-                        {insight.items.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <span className="text-orange-500 mt-0.5">●</span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    
-                    {/* Payment items with arrows */}
-                    {insight.paymentItems && (
-                      <div className="text-xs lg:text-sm text-gray-600 space-y-1 mt-1">
-                        {insight.paymentItems.map((item, i) => (
-                          <p key={i}>
-                            <span className="text-gray-800">{item.name}</span>
-                            <span className="text-gray-400"> → </span>
-                            <span className="text-gray-600">{item.offer}</span>
-                          </p>
-                        ))}
-                      </div>
-                    )}
+            </div>
+          </div>
+
+          {/* Desktop: Side by Side Layout */}
+          <div className="hidden lg:grid lg:grid-cols-[1fr_1.2fr] lg:gap-6 lg:items-start">
+            {/* Left Column: Featured Product */}
+            <div className="flex flex-col h-full justify-stretch">
+              {/* Best Value Label */}
+              <h2 className="text-base font-semibold text-gray-800 mb-3">Best Value Recommendation</h2>
+              {/* Featured Product Card */}
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden flex-1 flex flex-col h-full">
+                {/* Amazon Header */}
+                <div className="flex items-center gap-2 px-4 pt-3">
+                  <span className="text-orange-500 text-base">🔖</span>
+                  <span className="text-orange-500 font-bold text-xs">Amazon</span>
+                </div>
+                {/* Product Section */}
+                <div className="p-6 flex-1 flex flex-col">
+                  {/* Centered Image */}
+                  <div className="w-[240px] h-[240px] overflow-hidden mx-auto flex items-center justify-center">
+                    <img src={featuredProduct.image} alt={featuredProduct.name} className="w-full h-full object-contain" />
                   </div>
-                ))}
+                  {/* Text left + Button right */}
+                  <div className="flex gap-4 items-end mt-auto">
+                    {/* Text details - Left side */}
+                    <div className="flex-1 text-left">
+                      <span className="inline-block bg-green-500 text-white text-[9px] font-bold px-2 py-0.5 rounded mb-2">
+                        {featuredProduct.badge}
+                      </span>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">{featuredProduct.name}</h3>
+                      <p className="text-sm text-gray-500 mb-3">{featuredProduct.seller}</p>
+                      <div className="flex items-center gap-1 mb-3">
+                        <span className="bg-yellow-400 text-black text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                          {featuredProduct.rating} ★
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl font-bold text-gray-900">{featuredProduct.price}</span>
+                      </div>
+                    </div>
+                    {/* Button - Right side */}
+                    <div className="flex-shrink-0">
+                      <button
+                        className="px-6 py-3 rounded-full text-white font-semibold text-sm shadow-md whitespace-nowrap"
+                        style={{ background: 'linear-gradient(90deg, #FF9900 0%, #FF6F00 100%)' }}
+                      >
+                        Order in {featuredProduct.platform}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Insights */}
+            <div className="flex flex-col h-full">
+              {/* Matching heading for alignment */}
+              <h2 className="text-base font-semibold text-gray-800 mb-3">&nbsp;</h2>
+              {/* Deepenk Insights Section */}
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden flex-1 flex flex-col h-full">
+                <div className="p-4 lg:p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-sm font-bold text-gray-900 tracking-wide">DEEPENK INSIGHTS</h4>
+                    <button className="text-gray-400 hover:text-gray-600">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="5" r="2"/>
+                        <circle cx="12" cy="12" r="2"/>
+                        <circle cx="12" cy="19" r="2"/>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-6 lg:space-y-8">
+                    {insights.map((insight, idx) => (
+                      <div key={idx}>
+                        {/* Title with icon for Applied offers */}
+                        <p className="text-sm lg:text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
+                          {insight.icon && <span>{insight.icon}</span>}
+                          {insight.title}
+                        </p>
+                        
+                        {/* Content text */}
+                        {insight.content && (
+                          <p className="text-xs lg:text-sm text-gray-500 leading-relaxed">{insight.content}</p>
+                        )}
+                        
+                        {/* Bullet items for Applied offers */}
+                        {insight.items && (
+                          <ul className="text-xs lg:text-sm text-gray-600 space-y-2 mt-2">
+                            {insight.items.map((item, i) => (
+                              <li key={i} className="flex items-start gap-2">
+                                <span className="text-gray-800 mt-0.5">●</span>
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        
+                        {/* Payment items with arrows */}
+                        {insight.paymentItems && (
+                          <div className="text-xs lg:text-sm text-gray-600 space-y-1.5">
+                            {insight.paymentItems.map((item, i) => (
+                              <p key={i}>
+                                <span className="text-gray-800">{item.name}</span>
+                                <span className="text-gray-400"> → </span>
+                                <span className="text-gray-600">{item.offer}</span>
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
