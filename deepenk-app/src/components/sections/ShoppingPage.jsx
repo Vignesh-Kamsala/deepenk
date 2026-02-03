@@ -1,12 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { BsMicFill } from 'react-icons/bs'
+import { search } from '../../api/client'
 
 const ShoppingPage = () => {
+  const navigate = useNavigate()
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [cardQuery, setCardQuery] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const headerRef = useRef(null)
   const [contentPadding, setContentPadding] = useState(0)
+
+  const handleSearchSubmit = async (e) => {
+    e?.preventDefault()
+    const q = (searchQuery || '').trim()
+    if (!q) return
+    setSubmitting(true)
+    try {
+      const { searchId } = await search.start(q, 'shopping')
+      navigate(`/?searchId=${searchId}`)
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   const categories = [
     { id: 1, emoji: '📱', label: 'Mobiles' },
@@ -123,21 +139,21 @@ const ShoppingPage = () => {
             <button className="w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
               <span className="text-xl lg:text-2xl text-gray-500">+</span>
             </button>
-            <div className="flex-1 flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-full bg-gray-100 border border-gray-200 shadow-lg">
+            <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-full bg-gray-100 border border-gray-200 shadow-lg">
               <input
                 type="text"
-                placeholder="Type brifely what you want"
+                placeholder="Type briefly what you want"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 outline-none text-sm lg:text-base bg-transparent"
               />
               <BsMicFill className="text-gray-700" />
-              <button className="w-9 h-9 lg:w-10 lg:h-10 rounded-full bg-black flex items-center justify-center">
+              <button type="submit" disabled={submitting} className="w-9 h-9 lg:w-10 lg:h-10 rounded-full bg-black flex items-center justify-center disabled:opacity-50">
                 <svg width="16" height="16" fill="none" stroke="#FFF" viewBox="0 0 24 24" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </button>
-            </div>
+            </form>
           </div>
 
           {/* Categories */}

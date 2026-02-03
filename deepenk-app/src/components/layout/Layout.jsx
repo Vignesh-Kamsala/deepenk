@@ -4,11 +4,16 @@ import MobileHeader from './MobileHeader'
 import { LoginModal } from '../auth'
 import FeedbackButton from '../common/FeedbackButton'
 import { useLocation } from 'react-router-dom'
+import { analytics } from '../api/client'
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const location = useLocation()
   const isHome = location.pathname === '/'
+
+  useEffect(() => {
+    analytics.visit(location.pathname || '/').catch(() => {})
+  }, [location.pathname])
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
   const closeSidebar = () => setIsSidebarOpen(false)

@@ -1,64 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BsSearch } from 'react-icons/bs'
+import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../../store/authStore'
+import { history as historyApi } from '../../api/client'
+
+const filters = ['All', 'Food', 'E-commerce', 'Rides', 'Hotels', 'Travels']
 
 const HistoryPage = () => {
+  const { isAuthenticated, openLoginModal } = useAuthStore()
+  const navigate = useNavigate()
   const [activeFilter, setActiveFilter] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
+  const [bookings, setBookings] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const filters = ['All', 'Food', 'E-commerce', 'Rides', 'Hotels', 'Travels']
-
-  const bookings = [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      title: 'Radisson Blue - Thirupathi',
-      date: 'Completed on 10 Nov 2025',
-      status: 'Completed',
-      statusColor: '#E5E5E5',
-      textColor: '#757575'
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop',
-      title: 'CheeseBurger',
-      date: 'Completed on 10 Nov 2025',
-      status: 'Reorder',
-      statusColor: '#FF6F00',
-      textColor: '#FFFFFF'
-    },
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-      title: 'Rapido Bike',
-      date: '₹25',
-      status: 'On going',
-      statusColor: '#FFE0B2',
-      textColor: '#FF6F00'
-    },
-    {
-      id: 4,
-      image: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=300&fit=crop',
-      title: 'Amaravathi Travels',
-      date: 'Completed on 10 Feb 2026',
-      status: 'On going',
-      statusColor: '#FFE0B2',
-      textColor: '#FF6F00'
-    },
-    {
-      id: 5,
-      image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop',
-      title: 'CheeseBurger',
-      date: 'Completed on 18 Mar 2026',
-      status: 'cancel',
-      statusColor: '#FFCDD2',
-      textColor: '#EF5350'
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setBookings([])
+      setLoading(false)
+      return
     }
-  ]
+    setLoading(true)
+    setError(null)
+    const cat = activeFilter === 'All' ? undefined : activeFilter
+    historyApi.list(cat).then((res) => {
+      setBookings((res.items || []).map((item) => ({
+        id: item.id,
+        searchId: item.searchId,
+        image: item.image || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+        title: item.title || item.query,
+        date: item.date || item.timestamp,
+        status: item.status || 'Completed',
+        statusColor: '#E5E5E5',
+        textColor: '#757575'
+      })))
+    }).catch((err) => {
+      setError(err.body?.message || err.message)
+      setBookings([])
+    }).finally(() => setLoading(false))
+  }, [isAuthenticated, activeFilter])
 
-  const filteredBookings = bookings.filter(booking => {
-    const matchesSearch = booking.title.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesSearch
-  })
+  const filteredBookings = bookings.filter(booking =>
+    booking.title.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-white px-4 lg:px-8 pt-16 lg:pt-8 pb-4 flex flex-col">
@@ -68,14 +53,20 @@ const HistoryPage = () => {
           Your Booking History
         </h1>
 
+        {!isAuthenticated && (
+          <p className="text-center text-gray-500 mb-4">
+            <button type="button" onClick={openLoginModal} className="text-orange-500 font-medium hover:underline">Log in</button>
+            {' '}to see your booking history.
+          </p>
+        )}
+
         {/* Filter Tabs */}
         <div className="flex gap-3 lg:gap-4 mb-4 lg:mb-6 overflow-x-auto pb-2 justify-center">
           {filters.map((filter) => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-4 py-2 whitespace-nowrap transition-all active:scale-95 text-sm lg:text-base ${activeFilter === filter ? 'rounded-full' : 'rounded-md'
-                }`}
+              className={`px-4 py-2 whitespace-nowrap transition-all active:scale-95 text-sm lg:text-base ${activeFilter === filter ? 'rounded-full' : 'rounded-md'}`}
               style={{
                 backgroundColor: activeFilter === filter ? '#FF6B35' : 'transparent',
                 color: activeFilter === filter ? '#FFFFFF' : '#6B7280',
@@ -104,30 +95,31 @@ const HistoryPage = () => {
 
         {/* Booking List */}
         <div className="space-y-4 lg:space-y-5">
-          {filteredBookings.map((booking) => (
-            <div
+          {loading && (
+            <div className="text-center py-8">
+              <p className="text-gray-500">Loading history…</p>
+            </div>
+          )}
+          {error && (
+            <div className="text-center py-4">
+              <p className="text-red-600 text-sm">{error}</p>
+            </div>
+          )}
+          {!loading && !error && filteredBookings.map((booking) => (
+            <button
+              type="button"
               key={booking.id}
-              className="flex items-center gap-4 lg:gap-6 p-3 lg:p-4 rounded-2xl lg:rounded-3xl bg-white hover:shadow-lg transition-shadow"
+              onClick={() => booking.searchId && navigate(`/?searchId=${booking.searchId}`)}
+              className="w-full flex items-center gap-4 lg:gap-6 p-3 lg:p-4 rounded-2xl lg:rounded-3xl bg-white hover:shadow-lg transition-shadow text-left"
               style={{ boxShadow: '0 6px 18px rgba(15, 23, 42, 0.06)', border: '1px solid #F3F4F6' }}
             >
-              {/* Image */}
               <div className="w-20 h-16 lg:w-28 lg:h-20 rounded-xl lg:rounded-2xl overflow-hidden flex-shrink-0">
-                <img
-                  src={booking.image}
-                  alt={booking.title}
-                  className="w-full h-full object-cover"
-                />
+                <img src={booking.image} alt={booking.title} className="w-full h-full object-cover" />
               </div>
-
-              {/* Content */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-base lg:text-lg font-semibold mb-0.5 text-gray-900 truncate">
-                  {booking.title}
-                </h3>
+                <h3 className="text-base lg:text-lg font-semibold mb-0.5 text-gray-900 truncate">{booking.title}</h3>
                 <p className="text-xs lg:text-sm text-gray-500">{booking.date}</p>
               </div>
-
-              {/* Status Badge */}
               <div className="flex-shrink-0">
                 <div
                   className="px-4 lg:px-6 py-2 lg:py-2.5 rounded-full text-xs lg:text-sm font-medium"
@@ -136,12 +128,12 @@ const HistoryPage = () => {
                   {booking.status}
                 </div>
               </div>
-            </div>
+            </button>
           ))}
 
-          {filteredBookings.length === 0 && (
+          {!loading && !error && filteredBookings.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-base text-gray-400">No bookings found</p>
+              <p className="text-base text-gray-400">{isAuthenticated ? 'No bookings found' : 'Log in to see your history.'}</p>
             </div>
           )}
         </div>
