@@ -1,55 +1,145 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { BsSearch, BsGeoAlt } from 'react-icons/bs'
 import { MdLocationOn } from 'react-icons/md'
 import MapView from '../map/MapView'
 import { generateVehiclesNearPickupReal, geocodeLocationReal } from '../../utils/vehicleGenerator'
 
 const RidesPage = () => {
-  const [selectedTransport, setSelectedTransport] = useState(null)
-  const [isSearchFocused, setIsSearchFocused] = useState(false)
-  const [pickupLocation, setPickupLocation] = useState('')
-  const [dropLocation, setDropLocation] = useState('')
-  const [vehicles, setVehicles] = useState([])
+  // Location input states (user typing)
+  const [pickupInput, setPickupInput] = useState('')
+  const [dropInput, setDropInput] = useState('')
+  
+  // Confirmed location states (after clicking confirm)
+  const [confirmedPickupLocation, setConfirmedPickupLocation] = useState(null)
+  const [confirmedDropLocation, setConfirmedDropLocation] = useState(null)
+  
+  // Coordinate states (geocoded, stable for map)
   const [pickupCoords, setPickupCoords] = useState(null)
   const [dropCoords, setDropCoords] = useState(null)
+  
+  // Vehicle & UI states
+  const [vehicles, setVehicles] = useState([])
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
   const [isLoadingVehicles, setIsLoadingVehicles] = useState(false)
+  const [selectedTransport, setSelectedTransport] = useState(null)
+  
+  // Debounce refs to prevent excessive API calls during typing
+  const pickupDebounceRef = useRef(null)
+  const dropDebounceRef = useRef(null)
+  const vehiclesLoadedRef = useRef(false)
 
-  // Generate vehicles when pickup or drop location changes
+  // Debounced geocoding for pickup location input (as user types)
+  useEffect(() => {
+    if (pickupDebounceRef.current) {
+      clearTimeout(pickupDebounceRef.current)
+    }
+
+    if (pickupInput.trim()) {
+      pickupDebounceRef.current = setTimeout(async () => {
+        try {
+          const coords = await geocodeLocationReal(pickupInput)
+          setPickupCoords(coords)
+        } catch (error) {
+          console.error('Error geocoding pickup:', error)
+          setPickupCoords(null)
+        }
+      }, 500) // Wait 500ms after user stops typing
+    } else {
+      setPickupCoords(null)
+    }
+
+    return () => {
+      if (pickupDebounceRef.current) {
+        clearTimeout(pickupDebounceRef.current)
+      }
+    }
+  }, [pickupInput])
+
+  // Debounced geocoding for drop location input (as user types)
+  useEffect(() => {
+    if (dropDebounceRef.current) {
+      clearTimeout(dropDebounceRef.current)
+    }
+
+    if (dropInput.trim()) {
+      dropDebounceRef.current = setTimeout(async () => {
+        try {
+          const coords = await geocodeLocationReal(dropInput)
+          setDropCoords(coords)
+        } catch (error) {
+          console.error('Error geocoding drop:', error)
+          setDropCoords(null)
+        }
+      }, 500) // Wait 500ms after user stops typing
+    } else {
+      setDropCoords(null)
+    }
+
+    return () => {
+      if (dropDebounceRef.current) {
+        clearTimeout(dropDebounceRef.current)
+      }
+    }
+  }, [dropInput])
+
+  // Load vehicles ONLY when both locations are confirmed (not on every input change)
   useEffect(() => {
     const loadVehicles = async () => {
-      if (pickupLocation.trim()) {
-        setIsLoadingVehicles(true)
-        try {
-          // Geocode pickup location
-          const coords = await geocodeLocationReal(pickupLocation)
-          setPickupCoords(coords)
-
-          // Geocode drop location if provided
-          if (dropLocation.trim()) {
-            const dropCoords = await geocodeLocationReal(dropLocation)
-            setDropCoords(dropCoords)
-          } else {
-            setDropCoords(null)
-          }
-
-          // Generate vehicles near pickup with real road-snapping
-          const newVehicles = await generateVehiclesNearPickupReal(coords.lat, coords.lng)
-          setVehicles(newVehicles)
-        } catch (error) {
-          console.error('Error loading vehicles:', error)
-        } finally {
-          setIsLoadingVehicles(false)
-        }
-      } else {
-        // Clear vehicles if no pickup location
+      // Only load vehicles once when both locations are confirmed and have valid coordinates
+      if (!confirmedPickupLocation || !confirmedDropLocation || !pickupCoords) {
         setVehicles([])
-        setPickupCoords(null)
-        setDropCoords(null)
+        vehiclesLoadedRef.current = false
+        return
+      }
+
+      // Don't reload vehicles if they're already loaded for these locations
+      if (vehiclesLoadedRef.current) {
+        return
+      }
+
+      setIsLoadingVehicles(true)
+      try {
+        // Generate vehicles near the confirmed pickup location
+        const newVehicles = await generateVehiclesNearPickupReal(
+          pickupCoords.lat,
+          pickupCoords.lng
+        )
+        setVehicles(newVehicles)
+        vehiclesLoadedRef.current = true
+      } catch (error) {
+        console.error('Error loading vehicles:', error)
+        setVehicles([])
+      } finally {
+        setIsLoadingVehicles(false)
       }
     }
 
     loadVehicles()
-  }, [pickupLocation, dropLocation]) // Regenerate on either location change
+  }, [confirmedPickupLocation, confirmedDropLocation, pickupCoords])
+
+  // Handle confirming locations (user clicks confirm button)
+  const handleConfirmLocations = () => {
+    if (pickupInput.trim() && dropInput.trim()) {
+      setConfirmedPickupLocation(pickupInput)
+      setConfirmedDropLocation(dropInput)
+      // Reset vehicles flag to load new set for confirmed locations
+      vehiclesLoadedRef.current = false
+      setIsSearchFocused(false)
+    }
+  }
+
+  // Reset everything
+  const handleReset = () => {
+    setPickupInput('')
+    setDropInput('')
+    setConfirmedPickupLocation(null)
+    setConfirmedDropLocation(null)
+    setPickupCoords(null)
+    setDropCoords(null)
+    setVehicles([])
+    setIsSearchFocused(false)
+    vehiclesLoadedRef.current = false
+  }
 
   const transportTypes = [
     { id: 1, emoji: '🏍️', label: 'Bike', color: '#FF7043' },
@@ -92,17 +182,27 @@ const RidesPage = () => {
           ))}
         </div>
 
-        {/* Map Section */}
+        {/* Map Section - Shows CONFIRMED locations and vehicles */}
         <MapView
           pickupCoords={pickupCoords}
           dropCoords={dropCoords}
           vehicles={vehicles}
+          isLoading={isLoadingVehicles}
         />
 
         {/* Loading indicator */}
         {isLoadingVehicles && (
           <div className="mt-2 text-center text-sm" style={{ color: '#9E9E9E' }}>
-            Loading vehicles...
+            Loading nearby drivers...
+          </div>
+        )}
+
+        {/* Display confirmed locations */}
+        {confirmedPickupLocation && confirmedDropLocation && (
+          <div className="mt-4 px-4 py-3 bg-blue-50 rounded-lg text-center">
+            <p className="text-xs text-gray-600">
+              <span className="font-semibold">Pickup:</span> {confirmedPickupLocation} → <span className="font-semibold">Drop:</span> {confirmedDropLocation}
+            </p>
           </div>
         )}
 
@@ -147,8 +247,8 @@ const RidesPage = () => {
                   <input
                     type="text"
                     placeholder="Pickup......"
-                    value={pickupLocation}
-                    onChange={(e) => setPickupLocation(e.target.value)}
+                    value={pickupInput}
+                    onChange={(e) => setPickupInput(e.target.value)}
                     className="flex-1 outline-none text-[15px] bg-transparent"
                     style={{ color: '#111111' }}
                   />
@@ -160,20 +260,25 @@ const RidesPage = () => {
                   <input
                     type="text"
                     placeholder="Drop......"
-                    value={dropLocation}
-                    onChange={(e) => setDropLocation(e.target.value)}
+                    value={dropInput}
+                    onChange={(e) => setDropInput(e.target.value)}
                     className="flex-1 outline-none text-[15px] bg-transparent"
                     style={{ color: '#111111' }}
                   />
                 </div>
 
-                {/* Select from the map button */}
+                {/* Confirm Locations Button */}
                 <button
-                  className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium"
-                  style={{ backgroundColor: '#BDBDBD', color: '#FFFFFF' }}
+                  onClick={handleConfirmLocations}
+                  disabled={!pickupInput.trim() || !dropInput.trim() || !pickupCoords || !dropCoords}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-full text-sm font-medium w-full disabled:opacity-50 transition-all"
+                  style={{ 
+                    backgroundColor: (pickupInput.trim() && dropInput.trim() && pickupCoords && dropCoords) ? '#1976D2' : '#BDBDBD', 
+                    color: '#FFFFFF' 
+                  }}
                 >
                   <BsGeoAlt className="text-sm" />
-                  <span>Select from the map</span>
+                  <span>Confirm Locations & Find Drivers</span>
                 </button>
               </div>
             )}
@@ -181,11 +286,21 @@ const RidesPage = () => {
         </div>
 
         {/* Note at bottom - always visible */}
-        <div className="mt-6 px-2">
+        <div className="mt-6 px-2 flex flex-col items-center gap-3">
           <p className="text-center text-[10px] leading-relaxed" style={{ color: '#9E9E9E' }}>
-            Note: This is a trial version, so results may be limited, optimized and not real data and Your feedback will help us improve the final product with better features.
+            Note: This is a trial version, so results may be limited, optimized and not real data. Your feedback will help us improve the final product with better features.
           </p>
-
+          
+          {/* Reset button - shown when locations are confirmed */}
+          {confirmedPickupLocation && confirmedDropLocation && (
+            <button
+              onClick={handleReset}
+              className="px-6 py-2 rounded-full text-sm font-medium transition-all"
+              style={{ backgroundColor: '#F5F5F5', color: '#111', border: '1px solid #E5E5E5' }}
+            >
+              Clear & Search New Route
+            </button>
+          )}
         </div>
       </div>
     </div>

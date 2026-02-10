@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useMemo } from 'react'
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -78,57 +78,98 @@ const dropIcon = L.divIcon({
     iconAnchor: [32, 18],
 })
 
-// Component to auto-fit map bounds
+// Component to auto-fit map bounds with stability
 const MapBoundsController = ({ pickupCoords, dropCoords, vehicles }) => {
     const map = useMap()
+    const hasInitializedRef = useRef(false)
+    const lastPickupRef = useRef(null)
+    const lastDropRef = useRef(null)
 
     useEffect(() => {
-        const bounds = []
+        // Only fit bounds once when both pickup and drop are provided
+        if (pickupCoords && dropCoords) {
+            const boundsChanged = 
+                !lastPickupRef.current || !lastDropRef.current ||
+                lastPickupRef.current.lat !== pickupCoords.lat ||
+                lastPickupRef.current.lng !== pickupCoords.lng ||
+                lastDropRef.current.lat !== dropCoords.lat ||
+                lastDropRef.current.lng !== dropCoords.lng
 
-        if (pickupCoords) {
-            bounds.push([pickupCoords.lat, pickupCoords.lng])
+            if (boundsChanged && !hasInitializedRef.current) {
+                try {
+                    const bounds = [
+                        [pickupCoords.lat, pickupCoords.lng],
+                        [dropCoords.lat, dropCoords.lng]
+                    ]
+                    
+                    // Fit bounds only once with smooth animation
+                    setTimeout(() => {
+                        map.fitBounds(bounds, { 
+                            padding: [80, 80], 
+                            maxZoom: 15,
+                            animate: true,
+                            duration: 0.8
+                        })
+                    }, 100)
+                    
+                    hasInitializedRef.current = true
+                    lastPickupRef.current = pickupCoords
+                    lastDropRef.current = dropCoords
+                } catch (error) {
+                    console.log('Map bounds error:', error.message)
+                }
+            }
+        } else {
+            // Reset if locations are cleared
+            hasInitializedRef.current = false
+            lastPickupRef.current = null
+            lastDropRef.current = null
         }
-
-        if (dropCoords) {
-            bounds.push([dropCoords.lat, dropCoords.lng])
-        }
-
-        vehicles.forEach(vehicle => {
-            bounds.push([vehicle.lat, vehicle.lng])
-        })
-
-        if (bounds.length > 0) {
-            map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 })
-        }
-    }, [map, pickupCoords, dropCoords, vehicles])
+    }, [pickupCoords, dropCoords, map])
 
     return null
 }
 
-const MapView = ({ pickupCoords, dropCoords, vehicles = [] }) => {
+const MapView = ({ pickupCoords, dropCoords, vehicles = [], isLoading = false }) => {
     const defaultCenter = [12.9716, 77.5946] // Bangalore center
     const defaultZoom = 13
+    const mapRef = useRef(null)
 
-    // Calculate route path
-    const routePath = pickupCoords && dropCoords
-        ? [[pickupCoords.lat, pickupCoords.lng], [dropCoords.lat, dropCoords.lng]]
-        : []
+    // Memoize initial center - stable reference
+    const mapCenter = useMemo(() => {
+        if (pickupCoords) {
+            return [pickupCoords.lat, pickupCoords.lng]
+        }
+        return defaultCenter
+    }, [pickupCoords?.lat, pickupCoords?.lng])
+
+    // Calculate route path only when coordinates change
+    const routePath = useMemo(() => {
+        if (pickupCoords && dropCoords) {
+            return [[pickupCoords.lat, pickupCoords.lng], [dropCoords.lat, dropCoords.lng]]
+        }
+        return []
+    }, [pickupCoords?.lat, pickupCoords?.lng, dropCoords?.lat, dropCoords?.lng])
 
     return (
         <div className="w-full rounded-3xl overflow-hidden" style={{ height: 420, position: 'relative' }}>
             <MapContainer
-                center={pickupCoords ? [pickupCoords.lat, pickupCoords.lng] : defaultCenter}
+                ref={mapRef}
+                center={mapCenter}
                 zoom={defaultZoom}
-                scrollWheelZoom={false}
-                zoomControl={false}
+                scrollWheelZoom={true}
+                zoomControl={true}
                 style={{ height: '100%', width: '100%' }}
+                whenCreated={(mapInstance) => {
+                    mapRef.current = mapInstance
+                }}
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                {/* Auto-fit bounds */}
+                {/* Auto-fit bounds - only fits once when both locations set */}
                 <MapBoundsController
                     pickupCoords={pickupCoords}
                     dropCoords={dropCoords}
@@ -140,6 +181,7 @@ const MapView = ({ pickupCoords, dropCoords, vehicles = [] }) => {
                     <Marker
                         position={[pickupCoords.lat, pickupCoords.lng]}
                         icon={pickupIcon}
+                        key="pickup"
                     />
                 )}
 
@@ -148,6 +190,7 @@ const MapView = ({ pickupCoords, dropCoords, vehicles = [] }) => {
                     <Marker
                         position={[dropCoords.lat, dropCoords.lng]}
                         icon={dropIcon}
+                        key="drop"
                     />
                 )}
 
@@ -158,13 +201,14 @@ const MapView = ({ pickupCoords, dropCoords, vehicles = [] }) => {
                         color="#1976D2"
                         weight={6}
                         opacity={0.8}
+                        key="route"
                     />
                 )}
 
-                {/* Vehicle markers */}
-                {vehicles.map((vehicle) => (
+                {/* Vehicle markers - lightweight rendering, stable */}
+                {vehicles && vehicles.length > 0 && vehicles.map((vehicle) => (
                     <Marker
-                        key={vehicle.id}
+                        key={`vehicle-${vehicle.id}-${vehicle.lat}-${vehicle.lng}`}
                         position={[vehicle.lat, vehicle.lng]}
                         icon={createVehicleIcon(
                             vehicle.brand,
@@ -172,6 +216,7 @@ const MapView = ({ pickupCoords, dropCoords, vehicles = [] }) => {
                             vehicle.brandTextColor,
                             vehicle.vehicleIcon
                         )}
+                        title={`${vehicle.brand} - ${vehicle.driverName || 'Driver'}`}
                     />
                 ))}
             </MapContainer>
@@ -207,6 +252,49 @@ const MapView = ({ pickupCoords, dropCoords, vehicles = [] }) => {
                     <div>OLA</div>
                 </div>
             </div>
+
+            {/* Loading overlay */}
+            {isLoading && (
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 999
+                }}>
+                    <div style={{
+                        backgroundColor: 'white',
+                        padding: '16px 24px',
+                        borderRadius: 12,
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        textAlign: 'center'
+                    }}>
+                        <div style={{
+                            width: 32,
+                            height: 32,
+                            border: '3px solid #1976D2',
+                            borderTop: '3px solid transparent',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite',
+                            margin: '0 auto 8px'
+                        }} />
+                        <p style={{ fontSize: 14, color: '#111', fontWeight: 500 }}>
+                            Finding nearby drivers...
+                        </p>
+                    </div>
+                    <style>{`
+                        @keyframes spin {
+                            from { transform: rotate(0deg); }
+                            to { transform: rotate(360deg); }
+                        }
+                    `}</style>
+                </div>
+            )}
         </div>
     )
 }
